@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServicesTests", "AccountServicesTests\AccountServicesTests.csproj", "{594FD749-C698-4DB1-B8AF-67895B37978C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServices", "AccountServices\AccountServices.csproj", "{0DE90376-9A9E-4EDC-BF1B-53B37FDDABF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServicesApi", "AccountServicesApi\AccountServicesApi.csproj", "{1B086113-672D-4A9E-A121-5A7DAB503316}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServices.Infrastructure", "AccountServices.Infrastructure\AccountServices.Infrastructure.csproj", "{C3D5AA3E-A77A-4C8E-B725-F59572F7B1A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{F5AB611C-C25A-4469-B005-6EE5A7E49BFF}"
+	ProjectSection(SolutionItems) = preProject
+		admin-setup-dev-environment-variables.ps1 = admin-setup-dev-environment-variables.ps1
+		run-migrations.ps1 = run-migrations.ps1
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{382DEA05-AA3D-47C5-8A41-0869C401F484}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServices.InfrastructureTests", "..\AccountServices.InfrastructureTests\AccountServices.InfrastructureTests.csproj", "{DA25E989-5AE0-449E-AFB2-1E0420083DA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{594FD749-C698-4DB1-B8AF-67895B37978C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{594FD749-C698-4DB1-B8AF-67895B37978C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{594FD749-C698-4DB1-B8AF-67895B37978C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{594FD749-C698-4DB1-B8AF-67895B37978C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE90376-9A9E-4EDC-BF1B-53B37FDDABF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE90376-9A9E-4EDC-BF1B-53B37FDDABF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE90376-9A9E-4EDC-BF1B-53B37FDDABF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE90376-9A9E-4EDC-BF1B-53B37FDDABF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B086113-672D-4A9E-A121-5A7DAB503316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B086113-672D-4A9E-A121-5A7DAB503316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B086113-672D-4A9E-A121-5A7DAB503316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B086113-672D-4A9E-A121-5A7DAB503316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D5AA3E-A77A-4C8E-B725-F59572F7B1A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D5AA3E-A77A-4C8E-B725-F59572F7B1A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D5AA3E-A77A-4C8E-B725-F59572F7B1A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D5AA3E-A77A-4C8E-B725-F59572F7B1A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{382DEA05-AA3D-47C5-8A41-0869C401F484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{382DEA05-AA3D-47C5-8A41-0869C401F484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{382DEA05-AA3D-47C5-8A41-0869C401F484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{382DEA05-AA3D-47C5-8A41-0869C401F484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA25E989-5AE0-449E-AFB2-1E0420083DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA25E989-5AE0-449E-AFB2-1E0420083DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA25E989-5AE0-449E-AFB2-1E0420083DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA25E989-5AE0-449E-AFB2-1E0420083DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4441ECF1-4C3D-418A-8459-5DF27F474E0D}
+	EndGlobalSection
+EndGlobal

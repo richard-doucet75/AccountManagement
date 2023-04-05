@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  account-services-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ACCOUNT_SERVICES_CONNECTION_STRING=${DOCKER_ACCOUNT_SERVICES_CONNECTION_STRING}
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - sql-server
+
+  sql-server:
+    container_name: sql-server-db
+    hostname: sql-server-db
+    restart: unless-stopped
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+        - "1433:1433"
+    environment:
+      MSSQL_SA_PASSWORD: "l0c@ldbp@ssw0rd"
+      ACCEPT_EULA: "Y"
+      MSSQL_AGENT_ENABLED: "true"
+    volumes:
+      - mssql:/var/opt/mssql
+      
+volumes:
+  mssql:
