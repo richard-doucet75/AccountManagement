@@ -1,0 +1,1 @@
+docker-compose -p account-services up sql-server --detach

@@ -10,15 +10,15 @@ public class PasswordHasher : IPasswordHasher
     private const int SaltSize = 128 / 8;
     private const int KeySize = 256 / 8;
     private const int Iterations = 100000;
-    private static readonly HashAlgorithmName hashAlgorithmName = HashAlgorithmName.SHA256;
-    private static readonly char delimiter = ';';
+    private static readonly HashAlgorithmName HashAlgorithmName = HashAlgorithmName.SHA256;
+    private const char delimiter = ';';
 
     public async Task<string> Hash(Password password)
     {
         return await Task.Run(() =>
         {
             var salt = RandomNumberGenerator.GetBytes(SaltSize);
-            var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, hashAlgorithmName, KeySize);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithmName, KeySize);
             return string.Join(delimiter, Convert.ToBase64String(salt), Convert.ToBase64String(hash));
         });
     }
@@ -31,7 +31,7 @@ public class PasswordHasher : IPasswordHasher
             var salt = Convert.FromBase64String(elements[0]);
             var hash = Convert.FromBase64String(elements[1]);
             
-            var inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, hashAlgorithmName, KeySize);
+            var inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithmName, KeySize);
 
             return CryptographicOperations.FixedTimeEquals(inputHash, hash);
         });

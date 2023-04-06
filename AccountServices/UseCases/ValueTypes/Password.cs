@@ -4,9 +4,9 @@ namespace AccountServices.UseCases.ValueTypes;
 
 public class Password
 {
-    public const int MinimumPasswordLength = 8;
-    public const int MaximumPasswordLength = 256;
-    public static readonly char[] SpecialCharacters = "!@#$%^&*".ToArray();
+    private const int MinimumPasswordLength = 8;
+    private const int MaximumPasswordLength = 256;
+    private static readonly char[] SpecialCharacters = "!@#$%^&*".ToArray();
     
     private readonly string _value;
 

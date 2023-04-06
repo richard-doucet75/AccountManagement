@@ -1,7 +1,7 @@
 using AccountServices.Services;
 using AccountServices.UseCases.ValueTypes;
 
-namespace AccountServicesTests.UseCases.Services;
+namespace AccountServices.Tests.UseCases.Services;
 
 public class PasswordHasher : IPasswordHasher
 {

@@ -1,4 +1,4 @@
-namespace AccountServicesTests.Gateways;
+namespace AccountServices.Tests.Gateways;
 
 public abstract class GatewayMode
 {

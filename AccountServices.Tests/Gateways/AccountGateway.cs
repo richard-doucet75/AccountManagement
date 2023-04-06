@@ -2,7 +2,7 @@ using AccountServices.Gateways;
 using AccountServices.Gateways.Entities;
 using AccountServices.UseCases.ValueTypes;
 
-namespace AccountServicesTests.Gateways;
+namespace AccountServices.Tests.Gateways;
 
 public class AccountGateway : IAccountGateway
 {

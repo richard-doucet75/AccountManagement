@@ -21,8 +21,10 @@ namespace AccountServices.Infrastructure.Gateways
                     v => v.ToString(),
                     v => (EmailAddress)v!
                 );
+
             modelBuilder.Entity<Account>()
-                .HasKey(p => p.EmailAddress);
+                .Property(p => p.Id)
+                .HasDefaultValueSql("NEWID()");
         }
 
     }

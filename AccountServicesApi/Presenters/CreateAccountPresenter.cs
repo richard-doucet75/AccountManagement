@@ -1,12 +1,12 @@
 using AccountServices.UseCases;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountServicesApi.Presenters;
 
 public class CreateAccountPresenter : CreateAccount.IPresenter
 {
-    public IResult Result { get; set; } = Results.BadRequest("Unexpected");
-
-    public record Request(string EmailAddress, string Password, string VerifyPassword);
+    public IResult Result { get; private set; } = Results.BadRequest("Unexpected");
 
     public async Task PresentAccountCreateError(string message)
     {

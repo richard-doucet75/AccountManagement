@@ -2,7 +2,7 @@ using AccountServices.UseCases.ValueTypes;
 using NUnit.Framework;
 using static AccountServices.UseCases.ValueTypes.EmailAddress;
 
-namespace AccountServicesTests.UseCases.ValueTypes;
+namespace AccountServices.Tests.UseCases.ValueTypes;
 
 public class EmailAddressTests
 {

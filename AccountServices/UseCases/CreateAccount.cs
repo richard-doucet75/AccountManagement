@@ -54,7 +54,7 @@ public class CreateAccount
     private async Task PresentCreateNewAccount(IPresenter presenter, EmailAddress emailAddress, Password password)
     {
         var passwordHash = await _passwordHasher.Hash(password);
-        await _accountGateway.Create(new Account(emailAddress, passwordHash))
+        await _accountGateway.Create(new Account(Guid.Empty, emailAddress, passwordHash))
             .ContinueWith(r =>
                 r.Exception is null
                     ? presenter.PresentAccountCreated()

@@ -1,18 +1,16 @@
 using NUnit.Framework;
 using AccountServices.UseCases;
-using AccountServicesTests.Gateways;
 using AccountServices.Gateways.Entities;
+using AccountServices.Tests.Gateways;
+using AccountServices.Tests.UseCases.Services;
 using AccountServices.UseCases.ValueTypes;
-using AccountServicesTests.UseCases.Services;
 using static AccountServices.UseCases.CreateAccount;
-using static AccountServicesTests.Gateways.GatewayMode;
+using static AccountServices.Tests.Gateways.GatewayMode;
 
-namespace AccountServicesTests.UseCases;
+namespace AccountServices.Tests.UseCases;
 public class CreateAccountTests
 {
-    private static readonly string PasswordHash = "PasswordHash";
-    private static readonly int PasswordSalt = 253;
-
+    private const string PasswordHash = "PasswordHash";
     private const string ValidPassword = "v@lidPassw0rd";
     private const string NewEmailAddress = "new-email-address@somedomain.com";
     
@@ -139,7 +137,7 @@ public class CreateAccountTests
             public async Task SetupGivenNewEmailAddress()
             {
                 _emailAddress = "existing-email-address@somedomain.com";
-                await _gateway!.Create(new Account(_emailAddress!, string.Empty));
+                await _gateway!.Create(new Account(Guid.Empty, _emailAddress!, string.Empty));
             }
 
             public class GivenMatchingPasswords

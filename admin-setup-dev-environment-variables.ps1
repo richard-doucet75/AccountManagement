@@ -6,7 +6,7 @@ if ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administ
 }
 
 Write-Host 'Setting enviornment variables'
-[System.Environment]::SetEnvironmentVariable('ACCOUNT_SERVICES_CONNECTION_STRING','Server=localhost;Database=AccountServices;User Id=sa;Password=l0c@ldbp@ssw0rd;Trusted_Connection=True;MultipleActiveResultSets=true', 'Machine')
+[System.Environment]::SetEnvironmentVariable('ACCOUNT_SERVICES_CONNECTION_STRING','Server=localhost;Database=AccountServices;User Id=sa;Password=l0c@ldbp@ssw0rd;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;integrated security=false', 'Machine')
 [System.Environment]::SetEnvironmentVariable('DOCKER_ACCOUNT_SERVICES_CONNECTION_STRING','Server=sql-server-db,1433;Database=AccountServices;User Id=sa;Password=l0c@ldbp@ssw0rd;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;integrated security=false;', 'Machine')
 
 Write-Host ''

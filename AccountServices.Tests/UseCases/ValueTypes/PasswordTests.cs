@@ -2,7 +2,7 @@ using NUnit.Framework;
 using AccountServices.UseCases.ValueTypes;
 using static AccountServices.UseCases.ValueTypes.Password;
 
-namespace AccountServicesTests.UseCases.ValueTypes;
+namespace AccountServices.Tests.UseCases.ValueTypes;
 public class PasswordTests
 {
     [Test]
@@ -12,10 +12,13 @@ public class PasswordTests
         const string notPasswordTest = "N0tPas$w0rd";
         
         var password = (Password)passwordTest;
+        Assert.Multiple(() =>
+        {
+            Assert.That(password, Is.TypeOf<Password>());
+            Assert.That((string)password, Is.EqualTo(passwordTest));
+            Assert.That(password, Is.Not.EqualTo((Password)notPasswordTest));
+        });
         
-        Assert.That(password, Is.TypeOf<Password>());
-        Assert.That((string)password, Is.EqualTo(passwordTest));
-        Assert.That(password, Is.Not.EqualTo((Password)notPasswordTest));
     }
 
     [Test]
