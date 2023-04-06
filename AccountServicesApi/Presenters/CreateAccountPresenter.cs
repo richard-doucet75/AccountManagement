@@ -1,6 +1,4 @@
 using AccountServices.UseCases;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace AccountServicesApi.Presenters;
 
