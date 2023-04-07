@@ -6,9 +6,11 @@ using AccountServicesApi.EndpointDefinitions;
 using AccountServicesApi.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointDefinitions(typeof(CreateAccountEndpointDefinition));
-builder.Services.AddTypeConverters();
-builder.Services.AddDbContext<AccountDbContext>(
+
+var services = builder.Services;
+services.AddEndpointDefinitions(typeof(CreateAccountEndpointDefinition));
+services.AddTypeConverters();
+services.AddDbContext<AccountDbContext>(
     options => options.UseSqlServer(Environment.GetEnvironmentVariable("ACCOUNT_SERVICES_CONNECTION_STRING"))
 );
 
