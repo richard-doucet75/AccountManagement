@@ -8,7 +8,7 @@ namespace AccountServices.Infrastructure.Tests.Services
         [Test]
         public async Task HashDoesNotEqualOriginal()
         {
-            const string password = "Pa$$word1;";
+            const string password = "Pa$$word1";
 
             var hasher = new PasswordHasher();
             Assert.That(await hasher.Hash(password), Is.Not.EqualTo(password));
@@ -18,14 +18,15 @@ namespace AccountServices.Infrastructure.Tests.Services
         [Test]
         public async Task MatchesOnlyWhenSame()
         {
-            const string password = "Pa$$word1;";
-
+            const string password = "Pa$$word1";
             var hasher = new PasswordHasher();
-            var password1 = await hasher.Hash(password);
 
             var hash = await hasher.Hash(password);
-            Assert.That(await hasher.Verify(password, hash));
-            Assert.That(await hasher.Verify(password + "X", hash), Is.False);
+            Assert.Multiple(async () =>
+            {
+                Assert.That(await hasher.Verify(password, hash));
+                Assert.That(await hasher.Verify(password + "X", hash), Is.False);
+            });
         }
     }
 }
