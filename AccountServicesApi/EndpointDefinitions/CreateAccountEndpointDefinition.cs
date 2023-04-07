@@ -1,32 +1,58 @@
-using UseCases = AccountServices.UseCases;
 using AccountServices.Infrastructure;
 using AccountServicesApi.Utilities;
-using AccountServicesApi.Presenters;
+using Microsoft.AspNetCore.Mvc;
+using AccountServices.UseCases;
+using AccountServices.UseCases.ValueTypes;
 using System.ComponentModel.DataAnnotations;
+using AccountServicesApi.EndpointDefinitions.Presenters;
 
 namespace AccountServicesApi.EndpointDefinitions;
 
 public class CreateAccountEndpointDefinition : IEndpointDefinition
 {
+    public record CreateAccountModel(
+        [property:
+            Required,
+            MinLength(EmailAddress.MinimumLength),
+            MaxLength(EmailAddress.MaximumLenght)]
+
+        EmailAddress EmailAddress,
+        [property: 
+            Required,
+            MinLength(Password.MinimumLength), 
+            MaxLength(Password.MaximumLength)] 
+        Password Password,
+        [property: 
+            Required,
+            MinLength(Password.MinimumLength),
+            MaxLength(Password.MaximumLength)] 
+            Password VerifyPassword
+        );
+
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapPost("/", CreateAccount);
+        app.MapPost("/", CreateAccount)
+            .WithTags("Account Management Endpoints")
+            .WithSummary("Create a user account")
+            .WithDescription("Create a user account given an email address and matching password and verify password")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest);
     }
-    
+
     public void DefineServices(IServiceCollection serviceCollection)
     {
         serviceCollection.UseInfrastructure();
     }
 
     private static async Task<IResult> CreateAccount(
-        UseCases.CreateAccount createAccount,
-        [Required(AllowEmptyStrings = false)] string emailAddress,
-        [Required(AllowEmptyStrings = false)] string password,
-        [Required(AllowEmptyStrings = false)] string verifyPassword
+            
+            CreateAccount createAccount,
+            [FromBody] CreateAccountModel model
         )
     {
+        
         var presenter = new CreateAccountPresenter();
-        await createAccount.Execute(presenter, emailAddress, password, verifyPassword);
+        await createAccount.Execute(presenter, model.EmailAddress, model.Password, model.VerifyPassword);
 
         return presenter.Result;
     }

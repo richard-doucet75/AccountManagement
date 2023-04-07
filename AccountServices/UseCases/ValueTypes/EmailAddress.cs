@@ -2,6 +2,8 @@ namespace AccountServices.UseCases.ValueTypes;
 
 public sealed class EmailAddress
 {
+    public const int MinimumLength = 3;
+    public const int MaximumLenght = 320;
     private readonly string _value;
 
     private EmailAddress(string value)

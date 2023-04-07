@@ -1,10 +1,14 @@
 using AccountServices.UseCases;
 
-namespace AccountServicesApi.Presenters;
+namespace AccountServicesApi.EndpointDefinitions.Presenters;
 
 public class CreateAccountPresenter : CreateAccount.IPresenter
 {
-    public IResult Result { get; private set; } = Results.BadRequest("Unexpected");
+    public IResult Result 
+    { 
+        get; 
+        private set; 
+    } = Results.BadRequest("Unexpected");
 
     public async Task PresentAccountCreateError(string message)
     {

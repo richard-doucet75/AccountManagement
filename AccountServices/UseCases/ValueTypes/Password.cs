@@ -4,8 +4,8 @@ namespace AccountServices.UseCases.ValueTypes;
 
 public class Password
 {
-    private const int MinimumPasswordLength = 8;
-    private const int MaximumPasswordLength = 256;
+    public const int MinimumLength = 8;
+    public const int MaximumLength = 256;
     private static readonly char[] SpecialCharacters = "!@#$%^&*".ToArray();
     
     private readonly string _value;
@@ -17,8 +17,8 @@ public class Password
 
     public static implicit operator Password(string value)
     {
-        if (value.Length is < MinimumPasswordLength 
-            or > MaximumPasswordLength)
+        if (value.Length is < MinimumLength 
+            or > MaximumLength)
             throw new InvalidPasswordException();
         
         if(value.All(c => !IsNumber(c)))

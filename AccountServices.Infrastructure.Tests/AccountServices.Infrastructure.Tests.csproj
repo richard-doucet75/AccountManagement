@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Gateways" />
-    <Folder Include="Services" />
   </ItemGroup>
 
 </Project>
