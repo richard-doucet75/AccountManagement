@@ -12,7 +12,7 @@ Requires the following:
 + dotnet 7.0
 + docker
 + Powershell
-+ An IDE of your choosing (Rider, VVisual Studio)
++ An IDE of your choosing (Rider, Visual Studio)
 
 ## Setup ##
 From the solution folder run the following commands:
