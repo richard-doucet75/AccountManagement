@@ -4,5 +4,6 @@ namespace AccountServices.Services;
 
 public interface IPasswordHasher
 {
-    public Task<string> Hash(Password password);
+    Task<string> Hash(Password password);
+    Task<bool> Verify(Password password, string passwordHash);
 }

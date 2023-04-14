@@ -7,4 +7,5 @@ public interface IAccountGateway
 {
     Task Create(Account account);
     Task<bool> Exist(EmailAddress emailAddress);
+    Task<Account?> Find(EmailAddress emailAddress);
 }

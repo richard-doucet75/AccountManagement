@@ -2,7 +2,7 @@ using NUnit.Framework;
 using AccountServices.UseCases;
 using AccountServices.Gateways.Entities;
 using AccountServices.Tests.Gateways;
-using AccountServices.Tests.UseCases.Services;
+using AccountServices.Tests.Services;
 using AccountServices.UseCases.ValueTypes;
 using static AccountServices.UseCases.CreateAccount;
 using static AccountServices.Tests.Gateways.GatewayMode;
@@ -90,22 +90,20 @@ public class CreateAccountTests
                 : GivenNewEmailAddress
             {
                 [Test]
-                public void AccountCreatedAndAccountCreatePresented()
+                public async Task AccountCreatedAndAccountCreatePresented()
                 {
+                    Assert.DoesNotThrowAsync(
+                        async () => await _useCase!.Execute(
+                            _presenter!, _emailAddress!, ValidPassword, ValidPassword));
+
+                    var account = await _gateway!.Find(_emailAddress!);
+
+                    Assert.That(account, Is.Not.Null);
                     Assert.Multiple(() =>
                     {
-                        Assert.DoesNotThrowAsync(
-                            async () => await _useCase!.Execute(
-                                _presenter!, _emailAddress!, ValidPassword, ValidPassword));
-
-                        var account = _gateway!.Find(_emailAddress!);
-                        Assert.Multiple(() =>
-                        {
-                            Assert.That(account, Is.Not.Null);
-                            Assert.That(account!.EmailAddress, Is.EqualTo(_emailAddress));
-                            Assert.That(account.PasswordHash, Is.EqualTo(PasswordHash));
-                            Assert.That(_presenter!.AccountCreated);
-                        });
+                        Assert.That(account!.EmailAddress, Is.EqualTo(_emailAddress));
+                        Assert.That(account.PasswordHash, Is.EqualTo(PasswordHash));
+                        Assert.That(_presenter!.AccountCreated);
                     });
                 }
             }
@@ -124,7 +122,7 @@ public class CreateAccountTests
                         
                         Assert.That(_presenter!.AccountCreated, Is.False);
                         Assert.That(_presenter!.PasswordMismatch);
-                        Assert.That(_gateway!.AccountsContain(_emailAddress!), Is.False);
+                        Assert.That(_gateway!.AccountsContains(_emailAddress!), Is.False);
                     });
                 }
             }

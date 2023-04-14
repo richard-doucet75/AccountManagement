@@ -24,4 +24,10 @@ public sealed class AccountGateway : IAccountGateway
         return await _context.Accounts
             .AnyAsync(a => a.EmailAddress == emailAddress);
     }
+
+    public async Task<Account?> Find(EmailAddress emailAddress)
+    {
+        return await _context.Accounts
+            .SingleOrDefaultAsync(c => c.EmailAddress == emailAddress);
+    }
 }
