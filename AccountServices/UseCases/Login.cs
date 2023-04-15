@@ -11,9 +11,9 @@ namespace AccountServices.UseCases
 
         public interface IPresenter
         {
-            void PresentNotFound();
-            void PresentAccessDenied();
-            void PresentSuccess();
+            Task PresentNotFound();
+            Task PresentAccessDenied();
+            Task PresentSuccess(Guid accountId, EmailAddress emailAddress);
         }
 
         public Login(IAccountGateway accountGateway, IPasswordHasher passwordHasher)
@@ -27,16 +27,17 @@ namespace AccountServices.UseCases
             var account = await _accountGateway.Find(emailAddress);
             if (account == null)
             {
-                presenter.PresentNotFound();
+                await presenter.PresentNotFound();
                 return;
             }
 
             if (!await _passwordHasher.Verify(password, account.PasswordHash))
             {
-                presenter.PresentAccessDenied();
+                await presenter.PresentAccessDenied();
+                return;
             }
 
-            presenter.PresentSuccess();
+            await presenter.PresentSuccess(account.Id, emailAddress);
         }
     }
 }

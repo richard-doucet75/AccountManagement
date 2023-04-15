@@ -5,6 +5,7 @@ using AccountServices.Tests.Gateways;
 using AccountServices.UseCases;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using static AccountServices.UseCases.Login;
+using AccountServices.UseCases.ValueTypes;
 
 namespace AccountServices.Tests.UseCases
 {
@@ -20,20 +21,28 @@ namespace AccountServices.Tests.UseCases
             public bool NotFoundPresented { get; private set; }
             public bool AccessDenied { get; private set; }
             public bool Success { get; private set; }
+            public Guid AccountId { get; private set; }
+            public EmailAddress? EmailAddress { get; private set; }
 
-            public void PresentNotFound()
+            public async Task PresentNotFound()
             {
                 NotFoundPresented = true;
+                await Task.CompletedTask;
             }
 
-            public void PresentAccessDenied()
+            public async Task PresentAccessDenied()
             {
                 AccessDenied = true;
+                await Task.CompletedTask;
             }
 
-            public void PresentSuccess()
+
+            public async Task PresentSuccess(Guid accountId, EmailAddress emailAddress)
             {
                 Success = true;
+                AccountId = accountId;
+                EmailAddress = emailAddress;
+                await Task.CompletedTask;
             }
         }
 
@@ -108,6 +117,7 @@ namespace AccountServices.Tests.UseCases
                     {
                         await _login!.Execute(_presenter!, _existingEmail!, _password!);
                         Assert.That(_presenter!.Success);
+                        Assert.That(_presenter!.EmailAddress, Is.EqualTo((EmailAddress)_existingEmail!));
                     }
                 }
             }

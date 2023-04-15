@@ -5,11 +5,13 @@ using AccountServices.UseCases;
 using AccountServices.UseCases.ValueTypes;
 using System.ComponentModel.DataAnnotations;
 using AccountServicesApi.EndpointDefinitions.Presenters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AccountServicesApi.EndpointDefinitions;
 
 public class CreateAccountEndpointDefinition : IEndpointDefinition
 {
+    [Serializable]
     public record CreateAccountModel(
         [property:
             Required,
@@ -44,6 +46,7 @@ public class CreateAccountEndpointDefinition : IEndpointDefinition
         serviceCollection.UseInfrastructure();
     }
 
+    [AllowAnonymous]
     private static async Task<IResult> CreateAccount(
             
             CreateAccount createAccount,

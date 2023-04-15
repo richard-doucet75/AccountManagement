@@ -26,4 +26,7 @@ You can launch the application either though your IDE or by running the docker-c
 
 
 
+## Technical Note ##
+### Keeping Microsoft.AspNetCore.Authentication.JwtBearer at version 7.03 ###
+** Microsoft.AspNetCore.Authentication.JwtBearer ** after versions 7.04 this component uses a preview version of System.Text.Json which causes a conflict warning with the Framework so for thte time being we cannot upgrade to a newer version.
 

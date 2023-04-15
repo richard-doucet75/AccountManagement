@@ -15,6 +15,7 @@ namespace AccountServices.Infrastructure
             serviceCollection.AddScoped<IAccountGateway, AccountGateway>();
             serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
             serviceCollection.AddScoped<UseCases.CreateAccount>();
+            serviceCollection.AddScoped<UseCases.Login>();
         }
     }
 }
