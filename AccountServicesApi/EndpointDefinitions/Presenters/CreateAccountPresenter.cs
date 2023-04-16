@@ -1,32 +1,43 @@
 using AccountServices.UseCases;
+using Azure;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AccountServicesApi.EndpointDefinitions.Presenters;
 
 public class CreateAccountPresenter : CreateAccount.IPresenter
 {
-    public IResult Result 
-    { 
-        get; 
-        private set; 
-    } = Results.BadRequest("Unexpected");
+    private HttpResponse _response;
+
+    public CreateAccountPresenter(HttpResponse response)
+    {
+        _response = response;
+    }
 
     public async Task PresentAccountCreateError(string message)
     {
-        Result = await Task.FromResult(Results.BadRequest(message));
+        _response.StatusCode = StatusCodes.Status500InternalServerError;
+        _response.ContentType = Text.Plain;
+        await _response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(message));
     }
 
     public async Task PresentAccountCreated()
     {
-        Result = await Task.FromResult(Results.Ok());
+        _response.StatusCode = StatusCodes.Status200OK;
+        await Task.CompletedTask;
     }
 
     public async Task PresentAccountExists()
     {
-        Result = await Task.FromResult(Results.BadRequest("Account already exists"));
+        _response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+        _response.ContentType = Text.Plain;
+        await _response.WriteAsync("Account already exists");
     }
 
     public async Task PresentPasswordMismatch()
     {
-        Result = await Task.FromResult(Results.BadRequest("Passwords must match"));
+        _response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+        _response.ContentType = Text.Plain;
+        await _response.WriteAsync("Passwords must match");
     }
 }

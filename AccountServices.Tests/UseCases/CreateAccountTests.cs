@@ -20,7 +20,7 @@ public class CreateAccountTests
     private EmailAddress? _emailAddress;
 
     #region Presenter 
-    private class Presenter : IPresenter
+    public class Presenter : IPresenter
     {
         public bool ExistingAccount { get; private set; }
         public bool AccountCreated { get; private set; }

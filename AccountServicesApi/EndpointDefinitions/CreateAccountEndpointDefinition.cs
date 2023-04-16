@@ -33,12 +33,13 @@ public class CreateAccountEndpointDefinition : IEndpointDefinition
 
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapPost("/", CreateAccount)
+        app.MapPost("api/Accounts/", CreateAccount)
             .WithTags("Account Management Endpoints")
             .WithSummary("Create a user account")
             .WithDescription("Create a user account given an email address and matching password and verify password")
             .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status422UnprocessableEntity)
+            .Produces(StatusCodes.Status500InternalServerError);
     }
 
     public void DefineServices(IServiceCollection serviceCollection)
@@ -47,16 +48,14 @@ public class CreateAccountEndpointDefinition : IEndpointDefinition
     }
 
     [AllowAnonymous]
-    private static async Task<IResult> CreateAccount(
-            
+    private static async Task CreateAccount(
+            HttpContext httpContext,
             CreateAccount createAccount,
             [FromBody] CreateAccountModel model
         )
     {
         
-        var presenter = new CreateAccountPresenter();
+        var presenter = new CreateAccountPresenter(httpContext.Response);
         await createAccount.Execute(presenter, model.EmailAddress, model.Password, model.VerifyPassword);
-
-        return presenter.Result;
     }
 }

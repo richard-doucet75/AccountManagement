@@ -95,7 +95,7 @@ namespace AccountServices.Tests.UseCases
                 {
                     _existingEmail = "exists@domain.com";
                     await new CreateAccount(new PasswordHasher(), _accountGateway!)
-                        .Execute(new CreateAccountPresenter(), _existingEmail, _password!, _password!);
+                        .Execute(new CreateAccountTests.Presenter(), _existingEmail, _password!, _password!);
                 }
 
                 public class GivenPasswordHashNotVerified

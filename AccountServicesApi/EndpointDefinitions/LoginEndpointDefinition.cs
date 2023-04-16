@@ -10,14 +10,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AccountServicesApi.EndpointDefinitions
 {
-    public class JwtEndpointDefinition : IEndpointDefinition
+    public class LoginEndpointDefinition : IEndpointDefinition
     {
         private const string JwtIssuerVariableName = "ACCOUNT_SERVICES_JWT_ISSUER";
         private const string JwtValidAudienceVariableName = "ACCOUNT_SERVICES_JWT_VALID_AUDIENCE";
         private const string JwtKeyVariableName = "ACCOUNT_SERVICES_JWT_KEY";
         public record JwtConfiguration(string Issuer, string ValidAudience, string Key);
         private static readonly JwtConfiguration Configuration;
-        static JwtEndpointDefinition()
+        static LoginEndpointDefinition()
         {
             Configuration = new JwtConfiguration(
                 Environment.GetEnvironmentVariable(JwtIssuerVariableName) 
@@ -38,7 +38,7 @@ namespace AccountServicesApi.EndpointDefinitions
 
         public void DefineEndpoints(WebApplication app)
         {
-            app.MapPost("/Login", Login)
+            app.MapPost("api/Accounts/Login", Login)
             .WithTags("Account Management Endpoints")
             .WithSummary("Login to user account")
             .WithDescription("validates email address and password and generates Jwt token")
@@ -77,12 +77,10 @@ namespace AccountServicesApi.EndpointDefinitions
         }
 
         [AllowAnonymous]
-        private async Task<IResult> Login(Login login, LoginModel loginModel)
+        private async Task Login(HttpContext context, Login login, LoginModel loginModel)
         {
-            var presenter = new LoginJwtPresenter(Configuration);
+            var presenter = new LoginJwtPresenter(context.Response, Configuration);
             await login.Execute(presenter, loginModel.EmailAddress, loginModel.Password);
-
-            return presenter.Result ?? throw new Exception();
         }
     }
 }
