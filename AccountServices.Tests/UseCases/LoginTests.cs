@@ -3,9 +3,9 @@
 using AccountServices.Infrastructure.Services;
 using AccountServices.Tests.Gateways;
 using AccountServices.UseCases;
-using AccountServicesApi.EndpointDefinitions.Presenters;
 using static AccountServices.UseCases.Login;
 using AccountServices.UseCases.ValueTypes;
+using Microsoft.Identity.Client;
 
 namespace AccountServices.Tests.UseCases
 {
@@ -21,7 +21,6 @@ namespace AccountServices.Tests.UseCases
             public bool NotFoundPresented { get; private set; }
             public bool AccessDenied { get; private set; }
             public bool Success { get; private set; }
-            public Guid AccountId { get; private set; }
             public EmailAddress? EmailAddress { get; private set; }
 
             public async Task PresentNotFound()
@@ -40,7 +39,6 @@ namespace AccountServices.Tests.UseCases
             public async Task PresentSuccess(Guid accountId, EmailAddress emailAddress)
             {
                 Success = true;
-                AccountId = accountId;
                 EmailAddress = emailAddress;
                 await Task.CompletedTask;
             }

@@ -6,7 +6,7 @@ namespace AccountServicesApi.ValueTypeConverters
 {
     public class PasswordTypeConverter : JsonConverter<Password>
     {
-        public override Password? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Password Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return reader.GetString() ?? throw new Exception("Null password not expected");
         }

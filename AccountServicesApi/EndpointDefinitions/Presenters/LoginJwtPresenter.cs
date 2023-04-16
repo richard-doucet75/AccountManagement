@@ -1,5 +1,4 @@
 ﻿using AccountServices.UseCases.ValueTypes;
-using Azure;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,8 +12,8 @@ namespace AccountServicesApi.EndpointDefinitions.Presenters
 {
     public class LoginJwtPresenter : IPresenter
     {
-        private JwtConfiguration _configuration;
-        private HttpResponse _response;
+        private readonly JwtConfiguration _configuration;
+        private readonly HttpResponse _response;
 
        
 
@@ -64,7 +63,6 @@ namespace AccountServicesApi.EndpointDefinitions.Presenters
             _response.ContentType = Text.Plain;
 
             await _response.WriteAsync(stringToken);
-
         }
     }
 }

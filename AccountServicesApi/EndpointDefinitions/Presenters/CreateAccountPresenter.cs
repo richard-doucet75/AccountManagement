@@ -1,5 +1,4 @@
 using AccountServices.UseCases;
-using Azure;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -7,7 +6,7 @@ namespace AccountServicesApi.EndpointDefinitions.Presenters;
 
 public class CreateAccountPresenter : CreateAccount.IPresenter
 {
-    private HttpResponse _response;
+    private readonly HttpResponse _response;
 
     public CreateAccountPresenter(HttpResponse response)
     {

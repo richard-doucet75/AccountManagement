@@ -2,7 +2,6 @@ using AccountServices.Gateways;
 using AccountServices.Gateways.Entities;
 using AccountServices.Services;
 using AccountServices.UseCases.ValueTypes;
-using System.ComponentModel.DataAnnotations;
 
 namespace AccountServices.UseCases;
 

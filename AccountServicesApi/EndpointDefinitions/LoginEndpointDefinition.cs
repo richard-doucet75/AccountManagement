@@ -29,6 +29,7 @@ namespace AccountServicesApi.EndpointDefinitions
             );
         }
 
+        [Serializable]
         public record LoginModel(
             [property: Required]
             EmailAddress EmailAddress,

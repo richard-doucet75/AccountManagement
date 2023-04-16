@@ -1,5 +1,4 @@
 ﻿using AccountServices.Gateways.Entities;
-using AccountServices.UseCases.ValueTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountServices.Infrastructure.Gateways
@@ -18,8 +17,8 @@ namespace AccountServices.Infrastructure.Gateways
             modelBuilder.Entity<Account>()
                 .Property(p => p.EmailAddress)
                 .HasConversion(
-                    v => v.ToString(),
-                    v => (EmailAddress)v!
+                    ea => ea.ToString(),
+                    ea => ea
                 );
 
             modelBuilder.Entity<Account>()

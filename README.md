@@ -1,8 +1,9 @@
 # Account Management Services
-Implements a set over services to manage user accounts.
+Implements a set over services to manage user accounts. see Swagger Endpoint (default) for details.
 
 Currently implements:
 + Create Account
++ Login
 
 ## Description ##
 This is sample code using dotnet in a clean domain style.  It uses docker-compose and powershell scripts to provide a good developer experience.  It exposes the domain over a minimal api with a swagger interface.

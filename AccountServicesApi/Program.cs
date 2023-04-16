@@ -3,7 +3,6 @@ using AccountServicesApi.ValueTypeConverters;
 using AccountServices.Infrastructure.Gateways;
 using AccountServicesApi.EndpointDefinitions;
 using AccountServicesApi.Utilities;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 

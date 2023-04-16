@@ -52,7 +52,7 @@ namespace AccountServices.UseCases
 
         private static async Task PresentSuccess(IPresenter presenter, Account account)
         {
-            await presenter.PresentSuccess(account!.Id, account.EmailAddress);
+            await presenter.PresentSuccess(account.Id, account.EmailAddress);
         }
     }
 }

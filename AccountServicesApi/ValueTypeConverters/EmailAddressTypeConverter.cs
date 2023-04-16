@@ -6,7 +6,7 @@ namespace AccountServicesApi.ValueTypeConverters
 {
     public class EmailAddressTypeConverter : JsonConverter<EmailAddress>
     {
-        public override EmailAddress? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override EmailAddress Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return reader.GetString() ?? throw new Exception("Null email address not expected");
         }
