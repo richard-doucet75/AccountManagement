@@ -5,6 +5,7 @@ using AccountServices.Tests.Gateways;
 using AccountServices.UseCases.ValueTypes;
 using static AccountServices.UseCases.CreateAccount;
 using static AccountServices.Tests.Gateways.GatewayMode;
+using AccountServices.UseCases.Models;
 
 namespace AccountServices.Tests.UseCases;
 public class CreateAccountTests
@@ -93,7 +94,8 @@ public class CreateAccountTests
                 {
                     Assert.DoesNotThrowAsync(
                         () => _useCase!.Execute(
-                            _presenter!, _emailAddress!, ValidPassword, ValidPassword));
+                            _presenter!, 
+                            new CreateAccountModel(_emailAddress!, ValidPassword, ValidPassword)));
 
                     var account = await _gateway!.Find(_emailAddress!);
 
@@ -118,7 +120,8 @@ public class CreateAccountTests
                     {
                         Assert.DoesNotThrowAsync(
                             async () => await _useCase!.Execute(
-                                _presenter!, _emailAddress!, ValidPassword, "mismatchedP@ssw0rd"));
+                                _presenter!,
+                                new CreateAccountModel(_emailAddress!, ValidPassword, "mismatchedP@ssw0rd")));
                         
                         Assert.That(_presenter!.AccountCreated, Is.False);
                         Assert.That(_presenter!.PasswordMismatch);
@@ -148,7 +151,8 @@ public class CreateAccountTests
                     {
                         Assert.DoesNotThrowAsync(
                             async () => await _useCase!.Execute(
-                                _presenter!, _emailAddress!, ValidPassword, ValidPassword));
+                                _presenter!,
+                                new CreateAccountModel( _emailAddress!, ValidPassword, ValidPassword)));
                         
                         Assert.That(_presenter!.ExistingAccount);
                         Assert.That(_presenter!.AccountCreated, Is.False);
@@ -175,7 +179,8 @@ public class CreateAccountTests
             {
                 Assert.DoesNotThrowAsync(
                     () => _useCase!.Execute(
-                        _presenter!, _emailAddress!, ValidPassword, ValidPassword));
+                        _presenter!,
+                        new CreateAccountModel(_emailAddress!, ValidPassword, ValidPassword)));
                 
                 Assert.That(_presenter!.AccountError, Is.EqualTo(UnexpectedGatewayError));
             });

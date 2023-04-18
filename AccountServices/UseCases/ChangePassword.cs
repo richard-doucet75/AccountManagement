@@ -25,23 +25,20 @@ public class ChangePassword
     public async Task Execute(
         IPresenter presenter, 
         IUserContext userContext, 
-        Password oldPassword, 
-        Password newPassword,
-        Password verifyPassword)
+        ChangePasswordModel model)
     {
         var account = userContext.AccountId.HasValue 
             ? await _accountGateway.Find(userContext.AccountId.Value)
             : null;
 
         if (!(await PresentAccountNotFound(presenter, account)
-              || await PresentPasswordNotMatched(presenter, account!, oldPassword)
-              || await PresentPasswordNotVerified(presenter, newPassword, verifyPassword)))
+              || await PresentPasswordNotMatched(presenter, account!, model.OldPassword)
+              || await PresentPasswordNotVerified(presenter, model.NewPassword, model.VerifyPassword)))
         {
-            account!.PasswordHash = await newPassword.Hash();
+            account!.PasswordHash = await model.NewPassword.Hash();
             await _accountGateway.Update(account!);
+            await presenter.PasswordChanged();
         }
-
-        await presenter.PasswordChanged();
     }
 
     private static async Task<bool> PresentAccountNotFound(IPresenter presenter, Account? account)

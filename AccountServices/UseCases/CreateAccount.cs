@@ -1,5 +1,6 @@
 using AccountServices.Gateways;
 using AccountServices.Gateways.Entities;
+using AccountServices.UseCases.Models;
 using AccountServices.UseCases.ValueTypes;
 
 namespace AccountServices.UseCases;
@@ -24,12 +25,12 @@ public class CreateAccount
     }
     
     public async Task Execute(IPresenter presenter, 
-        EmailAddress emailAddress, Password password, Password verifyPassword)
+        CreateAccountModel model)
     {
-        if (await PresentWhenPasswordsMatch(presenter, password, verifyPassword)) return;
-        if (await PresentWhenEmailInUse(presenter, emailAddress)) return;
+        if (await PresentWhenPasswordsMatch(presenter, model.Password, model.VerifyPassword)) return;
+        if (await PresentWhenEmailInUse(presenter, model.EmailAddress)) return;
         
-        await PresentCreateNewAccount(presenter, emailAddress, password);
+        await PresentCreateNewAccount(presenter, model.EmailAddress, model.Password);
     }
 
     private static async Task<bool> PresentWhenPasswordsMatch(IPresenter presenter, Password password, Password verifyPassword)

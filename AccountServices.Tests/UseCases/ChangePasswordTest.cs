@@ -64,7 +64,7 @@ public class ChangePasswordTest
         [Test]
         public async Task PresentAccountNotFound()
         {
-            await _changePassword!.Execute(_presenter!, new UserContext(Guid.NewGuid()), OldPassword, OldPassword, OldPassword);
+            await _changePassword!.Execute(_presenter!, new UserContext(Guid.NewGuid()), new ChangePasswordModel(OldPassword, OldPassword, OldPassword));
             Assert.That(_presenter!.AccountNotFoundPresented);
         }   
     }
@@ -79,7 +79,9 @@ public class ChangePasswordTest
         public async Task SetUpExistingAccount()
         {
             var createAccount = new CreateAccount(_accountGateway!);
-            await createAccount.Execute(new CreateAccountTests.Presenter(), EmailAddress, OldPassword, OldPassword);
+            await createAccount.Execute(
+                new CreateAccountTests.Presenter(), 
+                new CreateAccountModel(EmailAddress, OldPassword, OldPassword));
         
             _accountId = (await _accountGateway!.Find(EmailAddress))!.Id;    
         }
@@ -100,7 +102,7 @@ public class ChangePasswordTest
             [Test]
             public async Task PresentWrongPassword()
             {
-                await _changePassword!.Execute(_presenter!, new UserContext(_accountId), _oldPassword!, _oldPassword!, _oldPassword!);
+                await _changePassword!.Execute(_presenter!, new UserContext(_accountId), new ChangePasswordModel(_oldPassword!, _oldPassword!, _oldPassword!));
                 Assert.That(_presenter!.WrongPasswordPresented);
             }
         }
@@ -133,7 +135,7 @@ public class ChangePasswordTest
                 [Test]
                 public async Task PresentPasswordNotVerified()
                 {
-                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId), _oldPassword!, _newPassword!, _verifyPassword!);
+                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId),new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
                     Assert.That(_presenter!.PasswordNotVerifiedPresented);
                 }
             }
@@ -153,10 +155,10 @@ public class ChangePasswordTest
                 {
                     var login = new Login(_accountGateway!);
                     var loginPresenter = new LoginTests.Presenter();
-                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId), _oldPassword!, _newPassword!, _verifyPassword!);
+                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId), new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
                     Assert.That(_presenter!.PasswordChangedPresented);
 
-                    await login.Execute(loginPresenter, EmailAddress, _newPassword!);
+                    await login.Execute(loginPresenter, new LoginModel(EmailAddress, _newPassword!));
                     Assert.That(loginPresenter.Success);
                 }
             }

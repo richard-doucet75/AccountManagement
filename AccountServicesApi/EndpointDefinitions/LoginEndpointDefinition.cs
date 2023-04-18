@@ -7,6 +7,7 @@ using AccountServicesApi.EndpointDefinitions.Presenters;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using AccountServices.UseCases.Models;
 
 namespace AccountServicesApi.EndpointDefinitions
 {
@@ -28,14 +29,6 @@ namespace AccountServicesApi.EndpointDefinitions
                     ?? throw new EnvironmentException(JwtKeyVariableName)
             );
         }
-
-        [Serializable]
-        public record LoginModel(
-            [property: Required]
-            EmailAddress EmailAddress,
-            [property: Required]
-            Password Password
-        );
 
         public void DefineEndpoints(WebApplication app)
         {
@@ -78,10 +71,10 @@ namespace AccountServicesApi.EndpointDefinitions
         }
 
         [AllowAnonymous]
-        private async Task Login(HttpContext context, Login login, LoginModel loginModel)
+        private async Task Login(HttpContext context, Login login, LoginModel model)
         {
             var presenter = new LoginJwtPresenter(context.Response, Configuration);
-            await login.Execute(presenter, loginModel.EmailAddress, loginModel.Password);
+            await login.Execute(presenter, model);
         }
     }
 }

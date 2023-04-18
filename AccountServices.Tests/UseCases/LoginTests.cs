@@ -4,6 +4,7 @@ using AccountServices.UseCases;
 using AccountServices.UseCases.Services;
 using static AccountServices.UseCases.Login;
 using AccountServices.UseCases.ValueTypes;
+using AccountServices.UseCases.Models;
 
 namespace AccountServices.Tests.UseCases
 {
@@ -76,7 +77,7 @@ namespace AccountServices.Tests.UseCases
                 public async Task PresentNotFound()
                 {
                     
-                    await _login!.Execute(_presenter!, _nonExistingEmail!, _password!);
+                    await _login!.Execute(_presenter!, new LoginModel(_nonExistingEmail!, _password!));
                     Assert.That(_presenter!.NotFoundPresented);
                 }
             }
@@ -91,7 +92,9 @@ namespace AccountServices.Tests.UseCases
                 {
                     _existingEmail = "exists@domain.com";
                     await new CreateAccount(_accountGateway!)
-                        .Execute(new CreateAccountTests.Presenter(), _existingEmail, _password!, _password!);
+                        .Execute(
+                            new CreateAccountTests.Presenter(),
+                            new CreateAccountModel(_existingEmail, _password!, _password!));
                 }
 
                 public class GivenPasswordHashNotVerified
@@ -100,7 +103,7 @@ namespace AccountServices.Tests.UseCases
                     [Test]
                     public async Task AccessDenied()
                     {
-                        await _login!.Execute(_presenter!, _existingEmail!, _password! + "X");
+                        await _login!.Execute(_presenter!, new LoginModel(_existingEmail!, _password! + "X"));
                         Assert.That(_presenter!.AccessDenied);
                     }
                 }
@@ -111,7 +114,7 @@ namespace AccountServices.Tests.UseCases
                     [Test]
                     public async Task AccessDenied()
                     {
-                        await _login!.Execute(_presenter!, _existingEmail!, _password!);
+                        await _login!.Execute(_presenter!, new LoginModel(_existingEmail!, _password!));
                         Assert.That(_presenter!.Success);
                         Assert.That(_presenter!.EmailAddress, Is.EqualTo((EmailAddress)_existingEmail!));
                     }

@@ -9,17 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace AccountServicesApi.EndpointDefinitions
 {
     public class ChangePasswordEndpointDefinition : IEndpointDefinition
-    {
-        [Serializable]
-        public record ChangePasswordModel(
-            [property: Required]
-            Password OldPassword,
-            [property: Required] 
-            Password NewPassword,
-            [property: Required] 
-            Password VerifyPasseword
-        );
-        
+    {       
         public void DefineEndpoints(WebApplication app)
         {
             app.MapPost("api/Accounts/ChangePassword", ChangePassword)
@@ -50,15 +40,13 @@ namespace AccountServicesApi.EndpointDefinitions
             HttpContext httpConext, 
             IUserContext userContext, 
             ChangePassword changePassword, 
-            ChangePasswordModel changePasswordModel)
+            ChangePasswordModel model)
         {
             var presenter = new ChangePasswordPresenter(httpConext.Response);
             await changePassword.Execute(
                 presenter,
                 userContext,
-                changePasswordModel.OldPassword,
-                changePasswordModel.NewPassword,
-                changePasswordModel.VerifyPasseword);
+                model);
         }
     }
 }

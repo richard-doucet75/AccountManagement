@@ -1,5 +1,6 @@
 ﻿using AccountServices.Gateways;
 using AccountServices.Gateways.Entities;
+using AccountServices.UseCases.Models;
 using AccountServices.UseCases.ValueTypes;
 
 namespace AccountServices.UseCases
@@ -20,11 +21,11 @@ namespace AccountServices.UseCases
             _accountGateway = accountGateway;
         }
 
-        public async Task Execute(IPresenter presenter, EmailAddress emailAddress, Password password)
+        public async Task Execute(IPresenter presenter, LoginModel model)
         {
-            var account = await _accountGateway.Find(emailAddress);
+            var account = await _accountGateway.Find(model.EmailAddress);
             if(!(await PresentAccountNotFound(presenter, account) || 
-                    await PresentAccessDenied(presenter, account!, password))) 
+                    await PresentAccessDenied(presenter, account!, model.Password))) 
                 await PresentSuccess(presenter, account!);
         }
 
