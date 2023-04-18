@@ -1,10 +1,8 @@
 ﻿using AccountServices.UseCases;
 using AccountServices.UseCases.Models;
-using AccountServices.UseCases.ValueTypes;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.ComponentModel.DataAnnotations;
 
 namespace AccountServicesApi.EndpointDefinitions
 {
@@ -18,6 +16,7 @@ namespace AccountServicesApi.EndpointDefinitions
                 .WithDescription("Changes the current users password")
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status401Unauthorized);
         }
 
