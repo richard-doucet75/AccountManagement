@@ -63,8 +63,8 @@ namespace AccountServices.Infrastructure.Tests.Gateways
                 .Accounts
                 .SingleOrDefault(a => a.EmailAddress == emailAddress);
             
-            var updated = account! with { EmailAddress = newerEmailAddress };
-            await _gateway!.Update(account, updated);
+            account!.EmailAddress = newerEmailAddress;
+            await _gateway!.Update(account);
             
             var updatedAccount = _context!
                 .Accounts

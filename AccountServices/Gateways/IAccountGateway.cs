@@ -9,5 +9,5 @@ public interface IAccountGateway
     Task<bool> Exist(EmailAddress emailAddress);
     Task<Account?> Find(EmailAddress emailAddress);
     Task<Account?> Find(Guid accountId);
-    Task Update(Account original, Account updated);
+    Task Update(Account account);
 }

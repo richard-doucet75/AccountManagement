@@ -22,7 +22,7 @@ public class AccountGateway : IAccountGateway
     
     public async Task Create(Account account)
     {
-        await _gatewayMode.Execute(Task.Run(() => _accounts.Add(account)));
+        await _gatewayMode.Execute(Task.Run(() => _accounts.Add((Account)account.Clone())));
     }
 
     public async Task<bool> Exist(EmailAddress emailAddress)
@@ -40,23 +40,25 @@ public class AccountGateway : IAccountGateway
     {
         return await Task.Run(() =>
             _accounts.SingleOrDefault(a => a.EmailAddress == emailAddress)
-        );
+                ?.Clone() as Account
+        ); ;
     }
 
     public async Task<Account?> Find(Guid accountId)
     {
         return await Task.Run(() =>
-            _accounts.SingleOrDefault(a => a.Id == accountId)
+            _accounts.SingleOrDefault(a => a.Id == accountId)?.Clone() as Account
         );
     }
 
-    public async Task Update(Account original, Account updated)
+    public async Task Update(Account account)
     {
         await Task.Run(() =>
         {
-            var oldAccount = _accounts.Single(i => i.Id == original.Id);
-            var index = _accounts.IndexOf(oldAccount);
-            _accounts[index] = updated;
+            var itemsRemoved = _accounts.Where(c => c.Id != account.Id).ToList();
+            _accounts.Clear();
+            _accounts.AddRange(itemsRemoved);
+            _accounts.Add((Account)account.Clone());
         });
     }
 }

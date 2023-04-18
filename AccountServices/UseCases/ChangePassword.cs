@@ -37,9 +37,8 @@ public class ChangePassword
               || await PresentPasswordNotMatched(presenter, account!, oldPassword)
               || await PresentPasswordNotVerified(presenter, newPassword, verifyPassword)))
         {
-            await _accountGateway.Update(account!, 
-                account! with { PasswordHash = await newPassword.Hash() }
-            );
+            account!.PasswordHash = await newPassword.Hash();
+            await _accountGateway.Update(account!);
         }
 
         await presenter.PasswordChanged();

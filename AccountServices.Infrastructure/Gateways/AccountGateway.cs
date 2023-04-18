@@ -37,9 +37,9 @@ public sealed class AccountGateway : IAccountGateway
             .SingleOrDefaultAsync(c => c.Id == accountId);
     }
 
-    public async Task Update(Account original, Account updated)
+    public async Task Update(Account account)
     {
-        _context.Entry(original).CurrentValues.SetValues(updated);
+        _context.Update(account);
         await _context.SaveChangesAsync();
     }
 }
