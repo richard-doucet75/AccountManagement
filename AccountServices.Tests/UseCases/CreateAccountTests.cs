@@ -2,7 +2,6 @@ using NUnit.Framework;
 using AccountServices.UseCases;
 using AccountServices.Gateways.Entities;
 using AccountServices.Tests.Gateways;
-using AccountServices.Tests.Services;
 using AccountServices.UseCases.ValueTypes;
 using static AccountServices.UseCases.CreateAccount;
 using static AccountServices.Tests.Gateways.GatewayMode;
@@ -73,7 +72,7 @@ public class CreateAccountTests
         public void SetUpGivenGatewaySuccess()
         {
             _gateway = new AccountGateway(SuccessMode);
-            _useCase = new CreateAccount(new PasswordHasher(PasswordHash), _gateway);    
+            _useCase = new CreateAccount(_gateway);    
         }
         
         
@@ -93,7 +92,7 @@ public class CreateAccountTests
                 public async Task AccountCreatedAndAccountCreatePresented()
                 {
                     Assert.DoesNotThrowAsync(
-                        async () => await _useCase!.Execute(
+                        () => _useCase!.Execute(
                             _presenter!, _emailAddress!, ValidPassword, ValidPassword));
 
                     var account = await _gateway!.Find(_emailAddress!);
@@ -102,9 +101,10 @@ public class CreateAccountTests
                     Assert.Multiple(() =>
                     {
                         Assert.That(account!.EmailAddress, Is.EqualTo(_emailAddress));
-                        Assert.That(account.PasswordHash, Is.EqualTo(PasswordHash));
                         Assert.That(_presenter!.AccountCreated);
                     });
+                    
+                    Assert.That(await ((Password)ValidPassword).Verify(account!.PasswordHash));
                 }
             }
 
@@ -164,7 +164,7 @@ public class CreateAccountTests
         public void SetUpGivenGatewayException()
         {
             _gateway = new AccountGateway(ExceptionMode);
-            _useCase = new CreateAccount(new PasswordHasher(PasswordHash), _gateway!);
+            _useCase = new CreateAccount(_gateway!);
             _emailAddress = NewEmailAddress;
         }
         
@@ -174,7 +174,7 @@ public class CreateAccountTests
             Assert.Multiple(() =>
             {
                 Assert.DoesNotThrowAsync(
-                    async () => await _useCase!.Execute(
+                    () => _useCase!.Execute(
                         _presenter!, _emailAddress!, ValidPassword, ValidPassword));
                 
                 Assert.That(_presenter!.AccountError, Is.EqualTo(UnexpectedGatewayError));

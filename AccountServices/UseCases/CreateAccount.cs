@@ -1,6 +1,5 @@
 using AccountServices.Gateways;
 using AccountServices.Gateways.Entities;
-using AccountServices.Services;
 using AccountServices.UseCases.ValueTypes;
 
 namespace AccountServices.UseCases;
@@ -8,13 +7,11 @@ namespace AccountServices.UseCases;
 public class CreateAccount
 {
     public const string UnexpectedGatewayError = "UNEXPECTED_ACCOUNT_GATEWAY_ERROR";
-    private readonly IPasswordHasher _passwordHasher;
     private readonly IAccountGateway _accountGateway;
 
-    public CreateAccount(IPasswordHasher passwordHasher,
-        IAccountGateway accountGateway)
+
+    public CreateAccount(IAccountGateway accountGateway)
     {
-        _passwordHasher = passwordHasher;
         _accountGateway = accountGateway;
     }
 
@@ -54,7 +51,7 @@ public class CreateAccount
     
     private async Task PresentCreateNewAccount(IPresenter presenter, EmailAddress emailAddress, Password password)
     {
-        var passwordHash = await _passwordHasher.Hash(password);
+        var passwordHash = await password.Hash();
         await _accountGateway.Create(new Account(Guid.Empty, emailAddress, passwordHash))
             .ContinueWith(r =>
                 r.Exception is null

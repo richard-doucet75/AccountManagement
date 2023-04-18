@@ -30,4 +30,16 @@ public sealed class AccountGateway : IAccountGateway
         return await _context.Accounts
             .SingleOrDefaultAsync(c => c.EmailAddress == emailAddress);
     }
+
+    public async Task<Account?> Find(Guid accountId)
+    {
+        return await _context.Accounts
+            .SingleOrDefaultAsync(c => c.Id == accountId);
+    }
+
+    public async Task Update(Account original, Account updated)
+    {
+        _context.Entry(original).CurrentValues.SetValues(updated);
+        await _context.SaveChangesAsync();
+    }
 }

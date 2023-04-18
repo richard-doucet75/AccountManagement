@@ -1,5 +1,6 @@
 ﻿using AccountServices.Gateways.Entities;
 using AccountServices.Infrastructure.Gateways;
+using AccountServices.UseCases.ValueTypes;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -49,6 +50,27 @@ namespace AccountServices.Infrastructure.Tests.Gateways
             
             Assert.That(account, Is.Not.Null);
             Assert.That(account!.Id, Is.Not.EqualTo(Guid.Empty));
+        }
+        
+        [Test]
+        public async Task Update()
+        {
+            const string emailAddress = "email.address@domain.com";
+            const string newerEmailAddress = "newer.email@domain.com";
+            await _gateway!.Create(new Account(Guid.Empty, emailAddress, string.Empty));
+
+            var account = _context!
+                .Accounts
+                .SingleOrDefault(a => a.EmailAddress == emailAddress);
+            
+            var updated = account! with { EmailAddress = newerEmailAddress };
+            await _gateway!.Update(account, updated);
+            
+            var updatedAccount = _context!
+                .Accounts
+                .SingleOrDefault(a => a.Id == account.Id);
+            
+            Assert.That(updatedAccount!.EmailAddress, Is.EqualTo((EmailAddress)newerEmailAddress));
         }
 
         public void Dispose()

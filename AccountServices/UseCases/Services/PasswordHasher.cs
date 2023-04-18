@@ -1,10 +1,9 @@
-using AccountServices.Services;
-using AccountServices.UseCases.ValueTypes;
 using System.Security.Cryptography;
+using AccountServices.UseCases.ValueTypes;
 
-namespace AccountServices.Infrastructure.Services;
+namespace AccountServices.UseCases.Services;
 
-public class PasswordHasher : IPasswordHasher
+public class PasswordHasher
 {
     private const int SaltSize = 128 / 8;
     private const int KeySize = 256 / 8;
@@ -12,7 +11,7 @@ public class PasswordHasher : IPasswordHasher
     private static readonly HashAlgorithmName HashAlgorithmName = HashAlgorithmName.SHA256;
     private const char Delimiter = ';';
 
-    public async Task<string> Hash(Password password)
+    public static async Task<string> Hash(Password password)
     {
         return await Task.Run(() =>
         {
@@ -22,7 +21,7 @@ public class PasswordHasher : IPasswordHasher
         });
     }
 
-    public async Task<bool> Verify(Password password, string passwordHash)
+    public static async Task<bool> Verify(Password password, string passwordHash)
     {
         return await Task.Run(() =>
         {

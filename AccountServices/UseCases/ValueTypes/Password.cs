@@ -1,3 +1,4 @@
+using AccountServices.UseCases.Services;
 using static System.Char;
 
 namespace AccountServices.UseCases.ValueTypes;
@@ -13,6 +14,16 @@ public class Password
     private Password(string value)
     {
         _value = value;
+    }
+
+    public async Task<string> Hash()
+    {
+        return await PasswordHasher.Hash(this);
+    }
+    
+    public async Task<bool> Verify(string hash)
+    {
+        return await PasswordHasher.Verify(this, hash);
     }
 
     public static implicit operator Password(string value)

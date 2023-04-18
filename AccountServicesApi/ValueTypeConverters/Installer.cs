@@ -30,7 +30,7 @@ namespace AccountServicesApi.ValueTypeConverters
                     Example = new OpenApiString("Pa$$word1")
                 });
 
-            options.CustomSchemaIds((type) => type.Name.TrimEnd("Model".ToArray()));
+            options.CustomSchemaIds((type) => type.Name.Substring(0, type.Name.Length - 5));
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using NUnit.Framework;
-
-using AccountServices.Infrastructure.Services;
 using AccountServices.Tests.Gateways;
 using AccountServices.UseCases;
+using AccountServices.UseCases.Services;
 using static AccountServices.UseCases.Login;
 using AccountServices.UseCases.ValueTypes;
-using Microsoft.Identity.Client;
 
 namespace AccountServices.Tests.UseCases
 {
@@ -16,7 +14,7 @@ namespace AccountServices.Tests.UseCases
         private string? _password;
 
 
-        private class Presenter : IPresenter
+        public class Presenter : IPresenter
         {
             public bool NotFoundPresented { get; private set; }
             public bool AccessDenied { get; private set; }
@@ -60,7 +58,7 @@ namespace AccountServices.Tests.UseCases
             public void SetUpGivenSuccessGatewayMode()
             {
                 _accountGateway = new AccountGateway(GatewayMode.SuccessMode);
-                _login = new Login(_accountGateway, new PasswordHasher());
+                _login = new Login(_accountGateway);
             }
 
             public class GivenEmailDoesNotExist 
@@ -92,7 +90,7 @@ namespace AccountServices.Tests.UseCases
                 public async Task SetUpGivenEmailExists()
                 {
                     _existingEmail = "exists@domain.com";
-                    await new CreateAccount(new PasswordHasher(), _accountGateway!)
+                    await new CreateAccount(_accountGateway!)
                         .Execute(new CreateAccountTests.Presenter(), _existingEmail, _password!, _password!);
                 }
 

@@ -42,4 +42,21 @@ public class AccountGateway : IAccountGateway
             _accounts.SingleOrDefault(a => a.EmailAddress == emailAddress)
         );
     }
+
+    public async Task<Account?> Find(Guid accountId)
+    {
+        return await Task.Run(() =>
+            _accounts.SingleOrDefault(a => a.Id == accountId)
+        );
+    }
+
+    public async Task Update(Account original, Account updated)
+    {
+        await Task.Run(() =>
+        {
+            var oldAccount = _accounts.Single(i => i.Id == original.Id);
+            var index = _accounts.IndexOf(oldAccount);
+            _accounts[index] = updated;
+        });
+    }
 }

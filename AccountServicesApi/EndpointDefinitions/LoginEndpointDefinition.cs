@@ -40,12 +40,12 @@ namespace AccountServicesApi.EndpointDefinitions
         public void DefineEndpoints(WebApplication app)
         {
             app.MapPost("api/Accounts/Login", Login)
-            .WithTags("Account Management Endpoints")
-            .WithSummary("Login to user account")
-            .WithDescription("validates email address and password and generates Jwt token")
-            .Produces(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status401Unauthorized);
+                .WithTags("Account Management Endpoints")
+                .WithSummary("Login to user account")
+                .WithDescription("validates email address and password and generates Jwt token")
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status401Unauthorized);
 
             app.UseAuthentication();
             app.UseAuthorization();
