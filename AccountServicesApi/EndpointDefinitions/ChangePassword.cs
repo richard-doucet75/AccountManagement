@@ -2,6 +2,7 @@
 using AccountServices.UseCases.Models;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
+
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AccountServicesApi.EndpointDefinitions
@@ -22,17 +23,6 @@ namespace AccountServicesApi.EndpointDefinitions
 
         public void DefineServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddHttpContextAccessor();
-            serviceCollection.TryAddScoped((services) =>
-            {
-                var context = services.GetRequiredService<IHttpContextAccessor>();
-                if (context.HttpContext is null)
-                    throw new Exception();
-
-                return context.HttpContext.User;
-            });
-
-            serviceCollection.TryAddScoped<IUserContext, UserContext>();
         }
 
         private async Task ChangePassword(

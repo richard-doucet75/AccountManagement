@@ -1,11 +1,11 @@
-using AccountServices.Infrastructure;
-using AccountServicesApi.Utilities;
-using Microsoft.AspNetCore.Mvc;
-using AccountServices.UseCases;
-using AccountServices.UseCases.ValueTypes;
-using System.ComponentModel.DataAnnotations;
-using AccountServicesApi.EndpointDefinitions.Presenters;
 using Microsoft.AspNetCore.Authorization;
+
+using AccountServicesApi.EndpointDefinitions.Presenters;
+using AccountServicesApi.Utilities;
+
+using AccountServices.Infrastructure;
+
+using AccountServices.UseCases;
 using AccountServices.UseCases.Models;
 
 namespace AccountServicesApi.EndpointDefinitions;
@@ -18,25 +18,24 @@ public class CreateAccountEndpointDefinition : IEndpointDefinition
             .WithTags("Account Management Endpoints")
             .WithSummary("Create a user account")
             .WithDescription("Create a user account given an email address and matching password and verify password")
-            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status500InternalServerError);
     }
 
     public void DefineServices(IServiceCollection serviceCollection)
     {
-        serviceCollection.UseInfrastructure();
     }
 
     [AllowAnonymous]
     private static async Task CreateAccount(
             HttpContext httpContext,
+            LinkGenerator linker,
             CreateAccount createAccount,
             CreateAccountModel model
         )
     {
-        
-        var presenter = new CreateAccountPresenter(httpContext.Response);
+        var presenter = new CreateAccountPresenter(httpContext.Response, linker);
         await createAccount.Execute(presenter, model);
     }
 }

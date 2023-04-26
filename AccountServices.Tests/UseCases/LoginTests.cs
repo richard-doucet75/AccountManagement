@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using AccountServices.Tests.Gateways;
 using AccountServices.UseCases;
-using AccountServices.UseCases.Services;
 using static AccountServices.UseCases.Login;
 using AccountServices.UseCases.ValueTypes;
 using AccountServices.UseCases.Models;
@@ -115,8 +114,11 @@ namespace AccountServices.Tests.UseCases
                     public async Task AccessDenied()
                     {
                         await _login!.Execute(_presenter!, new LoginModel(_existingEmail!, _password!));
-                        Assert.That(_presenter!.Success);
-                        Assert.That(_presenter!.EmailAddress, Is.EqualTo((EmailAddress)_existingEmail!));
+                        Assert.Multiple(() =>
+                        {
+                            Assert.That(_presenter!.Success);
+                            Assert.That(_presenter!.EmailAddress, Is.EqualTo((EmailAddress)_existingEmail!));
+                        });
                     }
                 }
             }

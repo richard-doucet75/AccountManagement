@@ -15,6 +15,7 @@ namespace AccountServices.Infrastructure
             serviceCollection.AddScoped<UseCases.CreateAccount>();
             serviceCollection.AddScoped<UseCases.Login>();
             serviceCollection.AddScoped<UseCases.ChangePassword>();
+            serviceCollection.AddScoped<UseCases.GetAccount>();
         }
     }
 }

@@ -1,14 +1,14 @@
-using AccountServices.Tests.Gateways;
 using NUnit.Framework;
+
 using AccountServices.UseCases;
 using AccountServices.UseCases.Models;
-using AccountServices.UseCases.Services;
 using AccountServices.UseCases.ValueTypes;
-using static AccountServices.UseCases.ChangePassword;
+using AccountServices.Tests.Gateways;
 using AccountServices.Tests.UseCases.Models;
+using static AccountServices.UseCases.ChangePassword;
 
 namespace AccountServices.Tests.UseCases;
-public class ChangePasswordTest
+public class ChangePasswordTests
 {
     private const string OldPassword = "Pa$$w0rd";
     private const string EmailAddress = "local-part@domain.com";
@@ -59,7 +59,7 @@ public class ChangePasswordTest
     }
 
     public class GivenNonExistentAccount
-            : ChangePasswordTest
+            : ChangePasswordTests
     {
         [Test]
         public async Task PresentAccountNotFound()
@@ -70,7 +70,7 @@ public class ChangePasswordTest
     }
 
     public class GivenExistingAccount
-        : ChangePasswordTest
+        : ChangePasswordTests
     {
         private Guid _accountId;
         private Password? _oldPassword;

@@ -27,7 +27,7 @@ public class CreateAccountTests
         public string? AccountError { get; private set; }
         public bool PasswordMismatch { get; private set; }
         
-        public async Task PresentAccountCreated()
+        public async Task PresentAccountCreated(Guid accountId)
         {
             await Task.Run(() =>
             {

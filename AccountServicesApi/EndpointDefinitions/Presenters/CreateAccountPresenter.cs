@@ -1,16 +1,18 @@
 using AccountServices.UseCases;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
+using static System.Net.Mime.MediaTypeNames;
 namespace AccountServicesApi.EndpointDefinitions.Presenters;
 
 public class CreateAccountPresenter : CreateAccount.IPresenter
 {
     private readonly HttpResponse _response;
+    private readonly LinkGenerator _linker;
 
-    public CreateAccountPresenter(HttpResponse response)
+    public CreateAccountPresenter(HttpResponse response, LinkGenerator linker)
     {
         _response = response;
+        _linker = linker;
     }
 
     public async Task PresentAccountCreateError(string message)
@@ -20,9 +22,10 @@ public class CreateAccountPresenter : CreateAccount.IPresenter
         await _response.BodyWriter.WriteAsync(Encoding.UTF8.GetBytes(message));
     }
 
-    public async Task PresentAccountCreated()
+    public async Task PresentAccountCreated(Guid accountId)
     {
-        _response.StatusCode = StatusCodes.Status200OK;
+        _response.Headers.Location = _linker.GetPathByName("GetAccount", values: new { id = accountId });
+        _response.StatusCode = StatusCodes.Status201Created;
         await Task.CompletedTask;
     }
 

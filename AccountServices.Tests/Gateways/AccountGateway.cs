@@ -20,9 +20,13 @@ public class AccountGateway : IAccountGateway
         return _accounts.Any(a=>a.EmailAddress == emailAddress);
     }
     
-    public async Task Create(Account account)
+    public async Task<Account> Create(Account account)
     {
-        await _gatewayMode.Execute(Task.Run(() => _accounts.Add((Account)account.Clone())));
+        var storable = (Account) account.Clone();
+        storable.Id = Guid.NewGuid();
+        
+        await _gatewayMode.Execute(Task.Run(() => _accounts.Add(storable)));
+        return (Account)storable.Clone();
     }
 
     public async Task<bool> Exist(EmailAddress emailAddress)
@@ -41,7 +45,7 @@ public class AccountGateway : IAccountGateway
         return await Task.Run(() =>
             _accounts.SingleOrDefault(a => a.EmailAddress == emailAddress)
                 ?.Clone() as Account
-        ); ;
+        );
     }
 
     public async Task<Account?> Find(Guid accountId)

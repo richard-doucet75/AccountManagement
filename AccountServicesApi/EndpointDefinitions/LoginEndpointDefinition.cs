@@ -1,12 +1,10 @@
 ﻿using System.Text;
 using AccountServices.UseCases;
 using AccountServicesApi.Utilities;
-using AccountServices.UseCases.ValueTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel.DataAnnotations;
 using AccountServices.UseCases.Models;
 
 namespace AccountServicesApi.EndpointDefinitions
@@ -46,7 +44,6 @@ namespace AccountServicesApi.EndpointDefinitions
 
         public void DefineServices(IServiceCollection serviceCollection)
         {
-
             serviceCollection.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

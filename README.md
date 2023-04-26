@@ -5,6 +5,7 @@ Currently implements:
 + Create Account
 + Change Password
 + Login
++ GetAccount
 
 ## Description ##
 This is sample code using dotnet in a clean domain style.  It uses docker-compose and powershell scripts to provide a good developer experience.  It exposes the domain over a minimal api with a swagger interface.

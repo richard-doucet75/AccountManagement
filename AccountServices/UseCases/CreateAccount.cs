@@ -19,7 +19,7 @@ public class CreateAccount
     public interface IPresenter
     {
         Task PresentAccountCreateError(string message);
-        Task PresentAccountCreated();
+        Task PresentAccountCreated(Guid accountId);
         Task PresentAccountExists();
         Task PresentPasswordMismatch();
     }
@@ -27,13 +27,13 @@ public class CreateAccount
     public async Task Execute(IPresenter presenter, 
         CreateAccountModel model)
     {
-        if (await PresentWhenPasswordsMatch(presenter, model.Password, model.VerifyPassword)) return;
-        if (await PresentWhenEmailInUse(presenter, model.EmailAddress)) return;
+        if (await WhenPasswordsMatch(presenter, model.Password, model.VerifyPassword)) return;
+        if (await WhenEmailInUse(presenter, model.EmailAddress)) return;
         
-        await PresentCreateNewAccount(presenter, model.EmailAddress, model.Password);
+        await WhenCreatingNewAccount(presenter, model.EmailAddress, model.Password);
     }
 
-    private static async Task<bool> PresentWhenPasswordsMatch(IPresenter presenter, Password password, Password verifyPassword)
+    private static async Task<bool> WhenPasswordsMatch(IPresenter presenter, Password password, Password verifyPassword)
     {
         if (password == verifyPassword) return false;
 
@@ -41,7 +41,7 @@ public class CreateAccount
         return true;
     }
 
-    private async Task<bool> PresentWhenEmailInUse(IPresenter presenter, EmailAddress emailAddress)
+    private async Task<bool> WhenEmailInUse(IPresenter presenter, EmailAddress emailAddress)
     {
         if (!await _accountGateway.Exist(emailAddress)) return false;
         
@@ -50,13 +50,17 @@ public class CreateAccount
 
     }
     
-    private async Task PresentCreateNewAccount(IPresenter presenter, EmailAddress emailAddress, Password password)
+    private async Task WhenCreatingNewAccount(IPresenter presenter, EmailAddress emailAddress, Password password)
     {
         var passwordHash = await password.Hash();
-        await _accountGateway.Create(new Account(Guid.Empty, emailAddress, passwordHash))
-            .ContinueWith(r =>
-                r.Exception is null
-                    ? presenter.PresentAccountCreated()
-                    : presenter.PresentAccountCreateError(UnexpectedGatewayError));
+        try
+        {
+            var account = await _accountGateway.Create(new Account(Guid.Empty, emailAddress, passwordHash));
+            await presenter.PresentAccountCreated(account.Id);
+        }
+        catch
+        { 
+            await presenter.PresentAccountCreateError(UnexpectedGatewayError);
+        }
     }
 }

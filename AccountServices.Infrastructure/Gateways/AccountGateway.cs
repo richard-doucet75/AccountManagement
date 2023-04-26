@@ -13,10 +13,12 @@ public sealed class AccountGateway : IAccountGateway
     {
         _context = context;
     }
-    public async Task Create(Account account)
+    public async Task<Account> Create(Account account)
     {
         _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
+
+        return account;
     }
 
     public async Task<bool> Exist(EmailAddress emailAddress)

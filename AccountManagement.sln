@@ -15,14 +15,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		admin-setup-dev-environment-variables.ps1 = admin-setup-dev-environment-variables.ps1
-		docker-compose-up.ps1 = docker-compose-up.ps1
 		README.md = README.md
+		docker-compose-up.ps1 = docker-compose-up.ps1
+		docker-reset-database.ps1 = docker-reset-database.ps1
 		run-migrations.ps1 = run-migrations.ps1
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{382DEA05-AA3D-47C5-8A41-0869C401F484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountServices.Infrastructure.Tests", "AccountServices.Infrastructure.Tests\AccountServices.Infrastructure.Tests.csproj", "{55DA94EA-286F-4972-8A6B-591C3ADC2BFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountServices.Infrastructure.Tests", "AccountServices.Infrastructure.Tests\AccountServices.Infrastructure.Tests.csproj", "{55DA94EA-286F-4972-8A6B-591C3ADC2BFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
