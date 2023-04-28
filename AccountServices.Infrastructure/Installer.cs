@@ -13,9 +13,10 @@ namespace AccountServices.Infrastructure
         {
             serviceCollection.AddScoped<IAccountGateway, AccountGateway>();
             serviceCollection.AddScoped<UseCases.CreateAccount>();
-            serviceCollection.AddScoped<UseCases.Login>();
             serviceCollection.AddScoped<UseCases.ChangePassword>();
+            serviceCollection.AddScoped<UseCases.ChangeEmailAddress>();
             serviceCollection.AddScoped<UseCases.GetAccount>();
+            serviceCollection.AddScoped<UseCases.Login>();
         }
     }
 }

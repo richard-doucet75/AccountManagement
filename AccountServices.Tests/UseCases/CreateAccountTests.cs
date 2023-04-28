@@ -23,7 +23,7 @@ public class CreateAccountTests
     public class Presenter : IPresenter
     {
         public bool ExistingAccount { get; private set; }
-        public bool AccountCreated { get; private set; }
+        public Guid? AccountCreated { get; private set; }
         public string? AccountError { get; private set; }
         public bool PasswordMismatch { get; private set; }
         
@@ -31,7 +31,7 @@ public class CreateAccountTests
         {
             await Task.Run(() =>
             {
-                AccountCreated = true;
+                AccountCreated = accountId;
             });
         }
 
@@ -103,7 +103,8 @@ public class CreateAccountTests
                     Assert.Multiple(() =>
                     {
                         Assert.That(account!.EmailAddress, Is.EqualTo(_emailAddress));
-                        Assert.That(_presenter!.AccountCreated);
+                        Assert.That(_presenter!.AccountCreated, Is.Not.Null);
+                        Assert.That(_presenter!.AccountCreated, Is.EqualTo(account.Id));
                     });
                     
                     Assert.That(await ((Password)ValidPassword).Verify(account!.PasswordHash));
@@ -123,7 +124,7 @@ public class CreateAccountTests
                                 _presenter!,
                                 new CreateAccountModel(_emailAddress!, ValidPassword, "mismatchedP@ssw0rd")));
                         
-                        Assert.That(_presenter!.AccountCreated, Is.False);
+                        Assert.That(_presenter!.AccountCreated, Is.Null);
                         Assert.That(_presenter!.PasswordMismatch);
                         Assert.That(_gateway!.AccountsContains(_emailAddress!), Is.False);
                     });
@@ -155,7 +156,7 @@ public class CreateAccountTests
                                 new CreateAccountModel( _emailAddress!, ValidPassword, ValidPassword)));
                         
                         Assert.That(_presenter!.ExistingAccount);
-                        Assert.That(_presenter!.AccountCreated, Is.False);
+                        Assert.That(_presenter!.AccountCreated, Is.Null);
                     });
                 }
             }

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
 
-using AccountServices.Infrastructure;
-
 using AccountServices.UseCases;
 using AccountServices.UseCases.Models;
 

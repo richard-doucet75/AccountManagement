@@ -3,21 +3,18 @@ using AccountServices.UseCases.Models;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
 
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 namespace AccountServicesApi.EndpointDefinitions
 {
-    public class ChangePasswordEndpointDefinition : IEndpointDefinition
+    public class ChangeEmailAddressEndpointDefinition : IEndpointDefinition
     {       
         public void DefineEndpoints(WebApplication app)
         {
-            app.MapPost("api/Accounts/ChangePassword", ChangePassword)
+            app.MapPost("api/Accounts/ChangeEmailAddress", ChangeEmailAddress)
                 .WithTags("Account Management Endpoints")
-                .WithSummary("Change Password")
-                .WithDescription("Changes the current users password")
+                .WithSummary("Change Email address")
+                .WithDescription("Changes the emailAddress for this account")
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status404NotFound)
-                .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status401Unauthorized);
         }
 
@@ -25,14 +22,14 @@ namespace AccountServicesApi.EndpointDefinitions
         {
         }
 
-        private async Task ChangePassword(
+        private async Task ChangeEmailAddress(
             HttpContext httpConext, 
             IUserContext userContext, 
-            ChangePassword changePassword, 
-            ChangePasswordModel model)
+            ChangeEmailAddress changeEmailAddress, 
+            ChangeEmailAddressModel model)
         {
-            var presenter = new ChangePasswordPresenter(httpConext.Response);
-            await changePassword.Execute(
+            var presenter = new ChangeEmailAddressPresenter(httpConext.Response);
+            await changeEmailAddress.Execute(
                 presenter,
                 userContext,
                 model);

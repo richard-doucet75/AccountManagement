@@ -4,6 +4,7 @@ Implements a set over services to manage user accounts. see Swagger Endpoint (de
 Currently implements:
 + Create Account
 + Change Password
++ Change Email
 + Login
 + GetAccount
 
