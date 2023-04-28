@@ -126,16 +126,6 @@ public class ChangeEmailAddress
                 await _presenter.PresentEmailAddressChanged();
             }
         }
-
-        internal Task CreateHandler(IPresenter presenter, IUserContext userContext, object accountId, object emailAddress)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal Task CreateHandler(IPresenter presenter, IUserContext userContext, Guid accountId, object emailAddress)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     
