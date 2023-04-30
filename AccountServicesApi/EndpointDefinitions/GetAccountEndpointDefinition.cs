@@ -14,7 +14,7 @@ public class GetAccountEndpointDefinition : IEndpointDefinition
 
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("api/Accounts/{id}", GetAccount)
+        app.MapGet("api/Accounts/{accountId}", GetAccount)
             .WithName("GetAccount")
             .WithTags("Account Management Endpoints")
             .WithSummary("Login to user account")
@@ -24,9 +24,13 @@ public class GetAccountEndpointDefinition : IEndpointDefinition
             .Produces(StatusCodes.Status401Unauthorized);
     }
 
-    private async Task GetAccount(HttpContext context, IUserContext userContext, GetAccount getAccount, Guid id)
+    private async Task GetAccount(
+        HttpContext context, 
+        IUserContext userContext, 
+        GetAccount getAccount, 
+        Guid accountId)
     {
         var presenter = new GetAccountPresenter(context.Response);
-        await getAccount.Execute(presenter, userContext, id);
+        await getAccount.Execute(presenter, userContext, accountId);
     }
 }
