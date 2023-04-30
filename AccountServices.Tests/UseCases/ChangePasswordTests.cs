@@ -15,7 +15,6 @@ public class ChangePasswordTests
     private ChangePassword? _changePassword;
     private AccountGateway? _accountGateway;
     private Presenter? _presenter;
-    private IUserContext _userContext;
 
     private class Presenter : IPresenter
     {
@@ -23,7 +22,7 @@ public class ChangePasswordTests
         public bool WrongPasswordPresented { get; private set; }
         public bool PasswordNotVerifiedPresented { get; private set; }
         public bool PasswordChangedPresented { get; private set; }
-        public bool AccessDeniedPresented { get; internal set; }
+        public bool AccessDeniedPresented { get; private set; }
 
         public async Task PresentAccountNotFound()
         {
