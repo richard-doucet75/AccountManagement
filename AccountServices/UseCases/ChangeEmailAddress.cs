@@ -50,7 +50,9 @@ public class ChangeEmailAddress
             if (emailAddress == account.EmailAddress)
                 return new HandleNoChangeRequired(presenter);
 
-            return new HandleChangeEmail(presenter, _accountGateway, 
+            return new HandleChangeEmail(
+                presenter, 
+                _accountGateway, 
                 account, emailAddress);
         }
 

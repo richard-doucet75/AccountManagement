@@ -9,11 +9,12 @@ namespace AccountServicesApi.EndpointDefinitions
     {       
         public void DefineEndpoints(WebApplication app)
         {
-            app.MapPost("api/Accounts/ChangePassword", ChangePassword)
+            app.MapPost("api/Accounts/{accountId}/ChangePassword", ChangePassword)
                 .WithTags("Account Management Endpoints")
                 .WithSummary("Change Password")
                 .WithDescription("Changes the current users password")
                 .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status401Unauthorized)
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status401Unauthorized);
@@ -24,15 +25,17 @@ namespace AccountServicesApi.EndpointDefinitions
         }
 
         private async Task ChangePassword(
+            ChangePassword changePassword,
             HttpContext httpConext, 
             IUserContext userContext, 
-            ChangePassword changePassword, 
+            Guid accountId,
             ChangePasswordModel model)
         {
             var presenter = new ChangePasswordPresenter(httpConext.Response);
             await changePassword.Execute(
                 presenter,
                 userContext,
+                accountId,
                 model);
         }
     }

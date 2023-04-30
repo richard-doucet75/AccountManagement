@@ -11,6 +11,7 @@ public class ChangePassword
 
     public interface IPresenter
     {
+        Task PresentAccessDenied();
         Task PresentAccountNotFound();
         Task PresentWrongPassword();
         Task PresentPasswordNotVerified();
@@ -25,12 +26,26 @@ public class ChangePassword
     public async Task Execute(
         IPresenter presenter, 
         IUserContext userContext, 
+        Guid accountId,
         ChangePasswordModel model)
     {
-        var account = userContext.AccountId.HasValue 
-            ? await _accountGateway.Find(userContext.AccountId.Value)
-            : null;
+        if (userContext.AccountId == null 
+            || userContext.AccountId.Value != accountId) 
+        {
+            await presenter.PresentAccessDenied();
+            return;
+        }
+        
+        var account = await _accountGateway.Find(accountId);
+        if (account is null)
+        {
+            await presenter.PresentAccountNotFound();
+            return;
+        }
 
+        if (!await model.OldPassword.Verify(account.PasswordHash))
+            await presenter.PresentWrongPassword();
+        
         if (!(await PresentAccountNotFound(presenter, account)
               || await PresentPasswordNotMatched(presenter, account!, model.OldPassword)
               || await PresentPasswordNotVerified(presenter, model.NewPassword, model.VerifyPassword)))

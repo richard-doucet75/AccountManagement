@@ -18,6 +18,12 @@ namespace AccountServicesApi.EndpointDefinitions.Presenters
             await Task.CompletedTask;
         }
 
+        public async Task PresentAccessDenied()
+        {
+            _response.StatusCode = StatusCodes.Status401Unauthorized;
+            await Task.CompletedTask;
+        }
+
         public async Task PresentAccountNotFound()
         {
             _response.StatusCode = StatusCodes.Status404NotFound;

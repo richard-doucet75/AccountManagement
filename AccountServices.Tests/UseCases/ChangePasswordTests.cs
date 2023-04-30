@@ -15,6 +15,7 @@ public class ChangePasswordTests
     private ChangePassword? _changePassword;
     private AccountGateway? _accountGateway;
     private Presenter? _presenter;
+    private IUserContext _userContext;
 
     private class Presenter : IPresenter
     {
@@ -22,7 +23,7 @@ public class ChangePasswordTests
         public bool WrongPasswordPresented { get; private set; }
         public bool PasswordNotVerifiedPresented { get; private set; }
         public bool PasswordChangedPresented { get; private set; }
-        
+        public bool AccessDeniedPresented { get; internal set; }
 
         public async Task PresentAccountNotFound()
         {
@@ -47,6 +48,12 @@ public class ChangePasswordTests
             PasswordChangedPresented = true;
             await Task.CompletedTask;
         }
+
+        public async Task PresentAccessDenied()
+        {
+            AccessDeniedPresented = true;
+            await Task.CompletedTask;
+        }
     }
     
 
@@ -58,108 +65,164 @@ public class ChangePasswordTests
         _changePassword = new ChangePassword(_accountGateway);
     }
 
-    public class GivenNonExistentAccount
-            : ChangePasswordTests
-    {
-        [Test]
-        public async Task PresentAccountNotFound()
-        {
-            await _changePassword!.Execute(_presenter!, new UserContext(Guid.NewGuid()), new ChangePasswordModel(OldPassword, OldPassword, OldPassword));
-            Assert.That(_presenter!.AccountNotFoundPresented);
-        }   
-    }
 
-    public class GivenExistingAccount
+
+    public class GivenNotLoggedIn 
         : ChangePasswordTests
     {
-        private Guid _accountId;
-        private Password? _oldPassword;
-        
-        [SetUp]
-        public async Task SetUpExistingAccount()
+        [Test]
+        public async Task PresentAccessDenied()
         {
-            var createAccount = new CreateAccount(_accountGateway!);
-            await createAccount.Execute(
-                new CreateAccountTests.Presenter(), 
-                new CreateAccountModel(EmailAddress, OldPassword, OldPassword));
-        
-            _accountId = (await _accountGateway!.Find(EmailAddress))!.Id;    
+            await _changePassword!.Execute(
+                _presenter!, new UserContext(null),
+                Guid.NewGuid(),
+                new ChangePasswordModel(OldPassword, OldPassword, OldPassword));
+
+            Assert.That(_presenter!.AccessDeniedPresented);
         }
+    }
 
-
-        public class GivenOldPasswordIsWrong
-            : GivenExistingAccount
+    public class GivenLoggedIn
+        : ChangePasswordTests
+    {
+        public class GivenAccountDoesNotMatch
+            : GivenLoggedIn
         {
-            private const string WrongPassword = "wr0ngPa$$w0rd";
-            
-
-            [SetUp]
-            public void SetupWrongPassword()
-            {
-                _oldPassword = WrongPassword;
-            }
-            
             [Test]
-            public async Task PresentWrongPassword()
+            public async Task PresentAccessDenied()
             {
-                await _changePassword!.Execute(_presenter!, new UserContext(_accountId), new ChangePasswordModel(_oldPassword!, _oldPassword!, _oldPassword!));
-                Assert.That(_presenter!.WrongPasswordPresented);
+                await _changePassword!.Execute(
+                    _presenter!, new UserContext(Guid.NewGuid()),
+                    Guid.NewGuid(),
+                    new ChangePasswordModel(OldPassword, OldPassword, OldPassword));
+
+                Assert.That(_presenter!.AccessDeniedPresented);
             }
         }
 
-        public class GivenOldPasswordIsCorrect
-            : GivenExistingAccount
+        public class GivenAccountsMatch
+            : GivenLoggedIn
         {
-            private string? _newPassword;
-            private string? _verifyPassword;
-            
-            [SetUp]
-            public void SetupCorrectPassword()
+            public class GivenAccountDoesntExists
+                : GivenAccountsMatch
             {
-                _oldPassword = OldPassword;
-                _newPassword   = OldPassword;
-                _verifyPassword= OldPassword;
-            }
-            
-            public class GivenNewPasswordDoesNotMatchVerifyPassword 
-                : GivenOldPasswordIsCorrect
-            {
-                [SetUp]
-                public void NewPasswordDoesNotMatchVerifyPassword()
-                {
-                    _newPassword = "NewPa$$w0rd";
-                    _verifyPassword = "VerifyPa$$w0rd";
-                }
-                
-                
                 [Test]
-                public async Task PresentPasswordNotVerified()
+                public async Task PresentAccountNotFound()
                 {
-                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId),new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
-                    Assert.That(_presenter!.PasswordNotVerifiedPresented);
-                }
-            }
-            
-            public class GivenNewPasswordMatchVerifyPassword 
-                : GivenOldPasswordIsCorrect
-            {
-                [SetUp]
-                public void NewPasswordDoesNotMatchVerifyPassword()
-                {
-                    _newPassword = "NewPa$$w0rd";
-                    _verifyPassword = _newPassword;
-                }
-                
-                [Test]
-                public async Task PresentPasswordChanged()
-                {
-                    var login = new Login(_accountGateway!);
-                    var loginPresenter = new LoginTests.Presenter();
-                    await _changePassword!.Execute(_presenter!, new UserContext(_accountId), new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
-                    Assert.That(_presenter!.PasswordChangedPresented);
+                    var accountId = Guid.NewGuid();
+                    await _changePassword!.Execute(
+                        _presenter!, new UserContext(accountId),
+                        accountId,
+                        new ChangePasswordModel(OldPassword, OldPassword, OldPassword));
 
-                    await login.Execute(loginPresenter, new LoginModel(EmailAddress, _newPassword!));
-                    Assert.That(loginPresenter.Success);
+                    Assert.That(_presenter!.AccountNotFoundPresented);
+                }
+            }
+
+            public class GivenAccountExists
+                : GivenAccountsMatch
+            {
+                private Guid _accountId;
+                private Password? _oldPassword;
+                
+                [SetUp]
+                public async Task SetUpExistingAccount()
+                {
+                    var createAccount = new CreateAccount(_accountGateway!);
+                    await createAccount.Execute(
+                        new CreateAccountTests.Presenter(), 
+                        new CreateAccountModel(EmailAddress, OldPassword, OldPassword));
+        
+                    _accountId = (await _accountGateway!.Find(EmailAddress))!.Id;    
+                }
+
+                public class GivenOldPasswordIsWrong
+                    : GivenAccountExists
+                {
+                    private const string WrongPassword = "wr0ngPa$$w0rd";
+                    
+                    [SetUp]
+                    public void SetupWrongPassword()
+                    {
+                        _oldPassword = WrongPassword;
+                    }
+                                
+                    [Test]
+                    public async Task PresentWrongPassword()
+                    {
+                        await _changePassword!.Execute(
+                            _presenter!,
+                            new UserContext(_accountId),
+                            _accountId, 
+                            new ChangePasswordModel(_oldPassword!, _oldPassword!, _oldPassword!));
+                        Assert.That(_presenter!.WrongPasswordPresented);
+                    }
+                }
+
+                public class GivenOldPasswordIsCorrect
+                    : GivenAccountExists
+                {
+                    private string? _newPassword;
+                    private string? _verifyPassword;
+                    
+                                
+                    [SetUp]
+                    public void SetupCorrectPassword()
+                    {
+                        _oldPassword = OldPassword;
+                        _newPassword   = OldPassword;
+                        _verifyPassword= OldPassword;
+                    }
+
+                    public class GivenNewPasswordDoesNotMatchVerifyPassword
+                        : GivenOldPasswordIsCorrect
+                    {
+                        [SetUp]
+                        public void NewPasswordDoesNotMatchVerifyPassword()
+                        {
+                            _newPassword = "NewPa$$w0rd";
+                            _verifyPassword = "VerifyPa$$w0rd";
+                        }
+                                        
+                        [Test]
+                        public async Task PresentPasswordNotVerified()
+                        {
+                            await _changePassword!.Execute(
+                                _presenter!, 
+                                new UserContext(_accountId),
+                                _accountId, 
+                                new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
+                            Assert.That(_presenter!.PasswordNotVerifiedPresented);
+                        }
+                    }
+
+                    public class GivenNewPasswordMatchVerifyPassword
+                        : GivenOldPasswordIsCorrect
+                    {
+                        [SetUp]
+                        public void NewPasswordDoesNotMatchVerifyPassword()
+                        {
+                            _newPassword = "NewPa$$w0rd";
+                            _verifyPassword = _newPassword;
+                        }
+                
+                        [Test]
+                        public async Task PresentPasswordChanged()
+                        {
+                            var login = new Login(_accountGateway!);
+                            var loginPresenter = new LoginTests.Presenter();
+                            await _changePassword!.Execute(
+                                _presenter!, 
+                                new UserContext(_accountId),
+                                _accountId, 
+                                new ChangePasswordModel(_oldPassword!, _newPassword!, _verifyPassword!));
+
+                            Assert.That(_presenter!.PasswordChangedPresented);
+
+                            await login.Execute(loginPresenter, new LoginModel(EmailAddress, _newPassword!));
+                            Assert.That(loginPresenter.Success);
+                        }
+                    }
                 }
             }
         }
