@@ -2,6 +2,8 @@ using AccountServices.UseCases;
 using AccountServices.UseCases.Models;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.SqlServer.Server;
 
 namespace AccountServicesApi.EndpointDefinitions;
 
@@ -24,10 +26,11 @@ public class GetAccountEndpointDefinition : IEndpointDefinition
             .Produces(StatusCodes.Status401Unauthorized);
     }
 
+    [Authorize]
     private async Task GetAccount(
         HttpContext context, 
         IUserContext userContext, 
-        GetAccount getAccount, 
+        GetAccount getAccount,
         Guid accountId)
     {
         var presenter = new GetAccountPresenter(context.Response);

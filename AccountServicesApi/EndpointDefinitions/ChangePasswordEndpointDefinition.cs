@@ -2,6 +2,7 @@
 using AccountServices.UseCases.Models;
 using AccountServicesApi.EndpointDefinitions.Presenters;
 using AccountServicesApi.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AccountServicesApi.EndpointDefinitions
 {
@@ -24,6 +25,7 @@ namespace AccountServicesApi.EndpointDefinitions
         {
         }
 
+        [Authorize]
         private async Task ChangePassword(
             ChangePassword changePassword,
             HttpContext httpConext, 

@@ -60,11 +60,12 @@ namespace AccountServices.Tests.UseCases
                 var presenter = new Presenter();
 
                 await _changeEmailAddress!.Execute(
-                    presenter, 
-                    new UserContext(Guid.NewGuid()), 
-                    new ChangeEmailAddressModel(
-                        Guid.NewGuid(), NewEmailAddress)
-                    );
+                    presenter,
+                    new UserContext(Guid.NewGuid()),
+                    Guid.NewGuid(),
+                    NewEmailAddress
+                );
+                    
                 Assert.That(presenter.NotFoundPresented);
             }
         }
@@ -100,9 +101,9 @@ namespace AccountServices.Tests.UseCases
                     await _changeEmailAddress!.Execute(
                         presenter,
                         new UserContext(Guid.NewGuid()),
-                        new ChangeEmailAddressModel(
-                            _accountId!.Value,
-                            NewEmailAddress));
+                        _accountId!.Value,
+                        NewEmailAddress
+                    );
                     
                     Assert.That(presenter.AccessDeniedPresented);
                 }
@@ -121,10 +122,9 @@ namespace AccountServices.Tests.UseCases
                         await _changeEmailAddress!.Execute(
                             presenter,
                             new UserContext(_accountId!.Value),
-                            new ChangeEmailAddressModel(
-                                _accountId!.Value,
-                                CurrentEmailAddress)
-                            );
+                            _accountId!.Value,
+                            CurrentEmailAddress
+                        );
 
                         Assert.That(presenter.NoChangeRequiredPresented);
                     }
@@ -140,9 +140,8 @@ namespace AccountServices.Tests.UseCases
                         await _changeEmailAddress!.Execute(
                             presenter,
                             new UserContext(_accountId!.Value),
-                            new ChangeEmailAddressModel(
                                 _accountId!.Value,
-                                NewEmailAddress)
+                                NewEmailAddress
                             );
 
                         var accountWithNewEmail = await _accountGateway!.Find(NewEmailAddress);

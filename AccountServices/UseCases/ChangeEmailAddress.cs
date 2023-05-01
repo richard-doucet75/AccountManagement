@@ -42,11 +42,13 @@ public class ChangeEmailAddress
             Guid accountId,
             EmailAddress emailAddress)
         {
-            var account = await _accountGateway.Find(accountId);
-            if(account == null) 
-                return new HandleAccountNotFound(presenter);
             if (userContext.AccountId != accountId)
                 return new HandleAccessDenied(presenter);
+
+            var account = await _accountGateway.Find(accountId); 
+            if(account == null) 
+                return new HandleAccountNotFound(presenter);
+
             if (emailAddress == account.EmailAddress)
                 return new HandleNoChangeRequired(presenter);
 
@@ -130,14 +132,14 @@ public class ChangeEmailAddress
         }
     }
 
-    
     public async Task Execute(
         IPresenter presenter,
         IUserContext userContext,
-        ChangeEmailAddressModel model)
+        Guid accountId,
+        EmailAddress newEmailAddress)
     {
         var factory = new HandlerFactory(_accountGateway);
-        var handler = await factory.CreateHandler(presenter, userContext, model.AccountId, model.EmailAddress);
+        var handler = await factory.CreateHandler(presenter, userContext, accountId, newEmailAddress);
 
         await handler.Execute();
     }
