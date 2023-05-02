@@ -16,6 +16,79 @@ namespace AccountServices.UseCases
             Task PresentSuccess(Guid accountId, EmailAddress emailAddress);
         }
 
+
+        private interface IHandler
+        {
+            Task Execute();
+        }
+
+        private class HandlerFactory
+        {
+            private readonly IAccountGateway _accountGateway;
+
+            public HandlerFactory(IAccountGateway accountGateway)
+            {
+                _accountGateway = accountGateway;
+            }
+            
+            public async Task<IHandler> CreateHandler(IPresenter presenter, EmailAddress emailAddress, Password password)
+            { 
+                var account = await _accountGateway.Find(emailAddress);
+                if (account is null)
+                    return new HandleAccountNotFound(presenter);
+                if (!await password.Verify(account.PasswordHash))
+                    return new HandleAccessDenied(presenter);
+
+                return new HandleLoginSuccess(presenter, account);
+            }
+
+            private class HandleAccountNotFound : IHandler
+            {
+                private readonly IPresenter _presenter;
+
+                public HandleAccountNotFound(IPresenter presenter)
+                {
+                    _presenter = presenter;
+                }
+
+                public async Task Execute()
+                {
+                    await _presenter.PresentNotFound();
+                }
+            }
+
+            private class HandleAccessDenied : IHandler
+            {
+                private readonly IPresenter _presenter;
+                public HandleAccessDenied(IPresenter presenter)
+                {
+                    _presenter = presenter;
+                }
+                
+                public async Task Execute()
+                {
+                    await _presenter.PresentAccessDenied();
+                }
+            }
+            
+            private class HandleLoginSuccess : IHandler
+            {
+                private readonly IPresenter _presenter;
+                private readonly Account _account;
+
+                public HandleLoginSuccess(IPresenter presenter, Account account)
+                {
+                    _presenter = presenter;
+                    _account = account;
+                }
+
+                public async Task Execute()
+                {
+                    await _presenter.PresentSuccess(_account.Id, _account.EmailAddress);
+                }
+            }
+        }
+
         public Login(IAccountGateway accountGateway)
         {
             _accountGateway = accountGateway;
@@ -23,34 +96,9 @@ namespace AccountServices.UseCases
 
         public async Task Execute(IPresenter presenter, LoginModel model)
         {
-            var account = await _accountGateway.Find(model.EmailAddress);
-            if(!(await PresentAccountNotFound(presenter, account) || 
-                    await PresentAccessDenied(presenter, account!, model.Password))) 
-                await PresentSuccess(presenter, account!);
-        }
-
-        private static async Task<bool> PresentAccountNotFound(IPresenter presenter, Account? account)
-        {
-            
-            var presentable = account == null;
-            if(presentable)
-                await presenter.PresentNotFound();
-
-            return presentable;
-        }
-
-        private async Task<bool> PresentAccessDenied(IPresenter presenter, Account account, Password password)
-        {
-            var presentable = !await password.Verify(account.PasswordHash);
-            if(presentable)
-                await presenter.PresentAccessDenied();
-
-            return presentable;
-        }
-        
-        private static async Task PresentSuccess(IPresenter presenter, Account account)
-        {
-            await presenter.PresentSuccess(account.Id, account.EmailAddress);
+            var factory = new HandlerFactory(_accountGateway);
+            var handler = await factory.CreateHandler(presenter, model.EmailAddress, model.Password);
+            await handler.Execute();
         }
     }
 }
