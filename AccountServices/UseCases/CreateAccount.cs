@@ -24,43 +24,98 @@ public class CreateAccount
         Task PresentPasswordMismatch();
     }
     
-    public async Task Execute(IPresenter presenter, 
+    private interface IHandler
+    {
+        Task Execute();
+    }
+
+    private class HandlerFactory
+    {
+        private readonly IAccountGateway _accountGateway;
+
+        public HandlerFactory(IAccountGateway accountGateway)
+        {
+            _accountGateway = accountGateway;
+        }
+
+        public async Task<IHandler> CreateHandler(IPresenter presenter, EmailAddress emailAddress, Password password, Password verifyPassword)
+        {
+            if(password != verifyPassword)
+                return new HandlePasswordDoesntMatch(presenter);
+
+            if (await _accountGateway.Exist(emailAddress))
+                return new HandleEmailInUse(presenter);
+
+            return new HandleCreatingNewAccount(_accountGateway, presenter, emailAddress, password);
+        }
+
+        private class HandlePasswordDoesntMatch : IHandler
+        {
+            private readonly IPresenter _presenter;
+
+            public HandlePasswordDoesntMatch(IPresenter presenter)
+            {
+                _presenter = presenter;
+            }
+            
+            public async Task Execute()
+            {
+                await _presenter.PresentPasswordMismatch();
+            }
+        }
+
+        private class HandleEmailInUse : IHandler
+        {
+            private readonly IPresenter _presenter;
+
+            public HandleEmailInUse(IPresenter presenter)
+            {
+                _presenter = presenter;
+            }
+            
+            public async Task Execute()
+            {
+                await _presenter.PresentAccountExists();
+            }
+        }
+        
+        private class HandleCreatingNewAccount: IHandler
+        {
+            private readonly IAccountGateway _accountGateway;
+            private readonly IPresenter _presenter;
+            private readonly EmailAddress _emailAddress;
+            private readonly Password _password;
+
+            public HandleCreatingNewAccount(IAccountGateway accountGateway, IPresenter presenter, EmailAddress emailAddress, Password password)
+            {
+                _accountGateway = accountGateway;
+                _presenter = presenter;
+                _emailAddress = emailAddress;
+                _password = password;
+            }
+            
+            public async Task Execute()
+            {
+                var passwordHash = await _password.Hash();
+                try
+                {
+                    var account = await _accountGateway.Create(new Account(Guid.Empty, _emailAddress, passwordHash));
+                    await _presenter.PresentAccountCreated(account.Id);
+                }
+                catch
+                { 
+                    await _presenter.PresentAccountCreateError(UnexpectedGatewayError);
+                }
+            }
+        }
+    }
+
+    public async Task Execute(
+        IPresenter presenter, 
         CreateAccountModel model)
     {
-        if (await WhenPasswordsMatch(presenter, model.Password, model.VerifyPassword)) return;
-        if (await WhenEmailInUse(presenter, model.EmailAddress)) return;
-        
-        await WhenCreatingNewAccount(presenter, model.EmailAddress, model.Password);
-    }
-
-    private static async Task<bool> WhenPasswordsMatch(IPresenter presenter, Password password, Password verifyPassword)
-    {
-        if (password == verifyPassword) return false;
-
-        await presenter.PresentPasswordMismatch();
-        return true;
-    }
-
-    private async Task<bool> WhenEmailInUse(IPresenter presenter, EmailAddress emailAddress)
-    {
-        if (!await _accountGateway.Exist(emailAddress)) return false;
-        
-        await presenter.PresentAccountExists();
-        return true;
-
-    }
-    
-    private async Task WhenCreatingNewAccount(IPresenter presenter, EmailAddress emailAddress, Password password)
-    {
-        var passwordHash = await password.Hash();
-        try
-        {
-            var account = await _accountGateway.Create(new Account(Guid.Empty, emailAddress, passwordHash));
-            await presenter.PresentAccountCreated(account.Id);
-        }
-        catch
-        { 
-            await presenter.PresentAccountCreateError(UnexpectedGatewayError);
-        }
+        var factory = new HandlerFactory(_accountGateway);
+        var handler = await factory.CreateHandler(presenter, model.EmailAddress, model.Password, model.VerifyPassword);
+        await handler.Execute();
     }
 }

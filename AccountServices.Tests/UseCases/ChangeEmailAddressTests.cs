@@ -58,11 +58,11 @@ namespace AccountServices.Tests.UseCases
             public async Task PresentNotFound()
             {
                 var presenter = new Presenter();
-
+                var accountId = Guid.NewGuid();
                 await _changeEmailAddress!.Execute(
                     presenter,
-                    new UserContext(Guid.NewGuid()),
-                    Guid.NewGuid(),
+                    new UserContext(accountId),
+                    accountId,
                     NewEmailAddress
                 );
                     
