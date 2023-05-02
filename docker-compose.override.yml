@@ -31,6 +31,13 @@ services:
       MSSQL_AGENT_ENABLED: "true"
     volumes:
       - mssql:/var/opt/mssql
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'mailhog'
+    ports:
+      - "1025:1025"
+      - "8025:8025"
       
 volumes:
   mssql:

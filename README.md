@@ -28,6 +28,8 @@ This will start the sql-server service in docker-compose and run the ef migratio
 
 You can launch the application either though your IDE or by running the docker-compose-up.ps1 script.  This script will ensure docker-compose start up the application using the same profile as the IDE.
 
+## Email (SMTP Server) ##
+Using MailHog as a Test SMTP server.  use:  http://localhost:8025/ to view emails generated and sent.
 
 
 ## Technical Note ##
